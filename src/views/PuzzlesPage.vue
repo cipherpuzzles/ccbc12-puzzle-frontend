@@ -8,6 +8,11 @@
                 </div>
             </div>
         </div>
+        <div class="row puzzle-content-line">
+            <div class="col">
+                {{puzzleContent}}
+            </div>
+        </div>
         <div class="row center">
             <div class="col">
                 <ProblemContent></ProblemContent>
@@ -40,6 +45,9 @@
     font-style: normal;
     font-weight: normal;
     text-rendering: optimizeLegibility;
+}
+.puzzle-content-line {
+    margin-bottom: 40px;
 }
 .problem-content {
     font-size: 2.5em;
@@ -125,6 +133,7 @@ const router = useRouter();
 const { PuzzlesScoreboardDialog, showPuzzlesScoreboard } = usePuzzlesScoreboard();
 const { PuzzlesAnnoDialog, showPuzzlesAnno } = usePuzzlesAnno();
 
+const puzzleContent = ref('');
 const content = ref('');
 const usedAssets = ref(0);
 const puzzleId = ref(0);
@@ -154,6 +163,7 @@ interface PuzzlesPageGetPuzzleDetailResponse extends BasicResponse {
     puzzle_id: number;
     problem_content: string;
     used_replaced_assets: number;
+    content: string;
 }
 
 async function reloadPuzzleDetail() {
@@ -165,6 +175,7 @@ async function reloadPuzzleDetail() {
         puzzleId.value = data.puzzle_id;
         content.value = data.problem_content;
         usedAssets.value = data.used_replaced_assets;
+        puzzleContent.value = data.content;
     } else {
         defaultApiErrorAction(data);
     }
