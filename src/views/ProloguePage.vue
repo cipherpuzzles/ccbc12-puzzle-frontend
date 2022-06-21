@@ -49,7 +49,9 @@ async function reloadPrologueHtml() {
 }
 
 function goNext() {
-    localStorage.setItem('navbar-step', "oo");
+    if (localStorage.getItem("navbar-step") !== "bar2nd-status") {
+        localStorage.setItem('navbar-step', "oo");
+    }
     router.push('/puzzles');
 }
 </script>
