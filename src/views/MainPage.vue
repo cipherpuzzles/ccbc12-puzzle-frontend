@@ -5,7 +5,9 @@
                 <div class="ratio ratio-bg main-area">
                     <div class="main-area-container">
                         <div class="main-area-header">
-                            <div>CCBC 12</div>
+                            <div class="left-header-bar">
+                                <button @click="showTipsContent">CCBC 12</button>
+                            </div>
                             <div class="year-explorer-bar">
                                 <input class="year-explorer-input" v-model="explorerYear" />
                             </div>
@@ -27,11 +29,9 @@
                                     <div class="puzzle-button puzzle-button-activated">1947</div>
                                     <div class="puzzle-button puzzle-button-activated">2024</div>
                                     <div class="puzzle-button puzzle-button-finished">2085</div>
-                                    <div class="puzzle-button puzzle-button-finished">2085</div>
-                                    <div class="puzzle-button puzzle-button-finished">2085</div>
                                 </div>
                                 <div class="puzzle-zone-meta">
-                                    <div class="puzzle-button puzzle-meta-finished">交汇点A</div>
+                                    <div class="puzzle-button puzzle-meta-finished">终结点A</div>
                                 </div>
                             </div>
                             <div class="main-area-zone zone-activated">
@@ -50,8 +50,28 @@
                                 
                             </div>
                         </div>
+                        <div class="main-area-meta-entrace">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!--操作提示对话框-->
+        <div class="modal fade" id="readTipsDialog" tabindex="-1" role="dialog" aria-labelledby="readTips" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
+            <div class="modal-content text-light bg-dark">
+                <div class="modal-header bg-info">
+                    <h4 class="modal-title" id="readTips">阅读信件</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" v-html="readTipsContent"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -115,6 +135,9 @@
                 margin-left: 34px;
                 margin-bottom: 5px;
             }
+        }
+        .left-header-bar{
+            width: 129px;
         }
     }
     .main-area-zone-list {
@@ -190,11 +213,55 @@
             background-image: url('../assets/frame/button_meta_finished.svg');
         }
     }
+    .main-area-meta-entrace {
+        cursor: pointer;
+        color: #afafaf;
+        animation: bounce-up-down 3s ease-in-out infinite;
+        text-align: center;
+        margin-top: 15px;
+    }
+    .meta-clear {
+        color: #32b491;
+    }
+}
+@keyframes bounce-up-down {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 </style>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Modal } from 'bootstrap';
+import gConst from "../gstatus/const";
+import { fetchPostWithSign, defaultApiErrorAction } from "../utils/fetchPost";
+import { marked } from 'marked';
+import type { BasicResponse } from '../utils/fetchPost';
 
 const explorerYear = ref(2022);
+const readTipsContent = ref('');
+
+async function showTipsContent() {
+    let api = gConst.apiRoot + "/play/get-main-help";
+    let res = await fetchPostWithSign(api, {});
+    let data = await res.json() as BasicResponse;
+
+    if (data.status == 1) {
+        readTipsContent.value = marked(data.message);
+    } else {
+        defaultApiErrorAction(data);
+    }
+
+    const el = document.getElementById("readTipsDialog");
+    if (!el) return;
+    let modal = new Modal(el);
+    modal.show();
+}
 </script>
