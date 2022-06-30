@@ -6,51 +6,53 @@
                     <div class="main-area-container">
                         <div class="main-area-header">
                             <div class="left-header-bar">
-                                <button @click="showTipsContent">CCBC 12</button>
+                                <button class="left-header-button button-group-start" @click="showTipsContent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="阅读说明信件">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                                        <path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                    </svg>
+                                </button>
+                                <button class="left-header-button button-group-middle" @click="showExplorerdYearHistory" data-bs-toggle="tooltip" data-bs-placement="bottom" title="显示已探测年份列表">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                                        <path d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                                    </svg>
+                                </button>
+                                <button class="left-header-button button-group-end" @click="showPuzzleStat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="查看平行世界时间线">
+                                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF">
+                                        <g><rect fill="none" height="24" width="24"/></g>
+                                        <g>
+                                            <g>
+                                                <path d="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10C22,6.48,17.52,2,12,2z M12,19c-0.83,0-1.5-0.67-1.5-1.5h3 C13.5,18.33,12.83,19,12,19z M15,16.5H9V15h6V16.5z M14.97,14H9.03C7.8,13.09,7,11.64,7,10c0-2.76,2.24-5,5-5s5,2.24,5,5 C17,11.64,16.2,13.09,14.97,14z"/>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
                             </div>
-                            <div class="year-explorer-bar">
-                                <input class="year-explorer-input" v-model="explorerYear" />
+                            <div class="year-explorer-bar" @click="sendYearProbe">
+                                <div class="dropdown">
+                                    <input class="year-explorer-input" v-model="explorerYear" data-bs-toggle="dropdown" @keyup.enter="sendYearProbe"/>
+                                    <ul class="dropdown-menu">
+                                        <li v-for="year in yearSelectionList" :key="'ys-' + year"><a class="dropdown-item" href="javascript:;" @click="explorerYear = year">{{year}}</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="power-point-bar">
-                                <div class="power-point-number">1200</div>
+                            <div class="power-point-bar" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'当前能量增速：' + powerPointIncreaseRate + ' /min'">
+                                <div class="power-point-number">{{ powerPointDynamic }}</div>
                             </div>
                         </div>
                         <div class="main-area-zone-list">
-                            <div class="main-area-zone zone-activated">
-                                <div class="puzzle-zone-top">
-                                    <h5>时间线 A</h5>
-                                    <div class="puzzle-button puzzle-button-finished">1709</div>
-                                    <div class="puzzle-button puzzle-button-inactive">1727</div>
-                                    <div class="puzzle-button puzzle-button-finished">1760</div>
-                                    <div class="puzzle-button puzzle-button-finished">1780</div>
-                                    <div class="puzzle-button puzzle-button-finished">1791</div>
-                                    <div class="puzzle-button puzzle-button-finished">1796</div>
-                                    <div class="puzzle-button puzzle-button-inactive">1853</div>
-                                    <div class="puzzle-button puzzle-button-activated">1947</div>
-                                    <div class="puzzle-button puzzle-button-activated">2024</div>
-                                    <div class="puzzle-button puzzle-button-finished">2085</div>
+                            <div v-for="yearList in yearListData" :key="yearList.pgid" class="main-area-zone" 
+                                :class="[ getAreaBackgroundClass(yearList) ]">
+                                <div class="puzzle-zone-top" v-if="yearList.puzzles && yearList.puzzles.length > 0">
+                                    <h5>{{yearList.group_name}}</h5>
+                                    <div v-for="puzzleItem in yearList.puzzles" :key="puzzleItem.year" class="puzzle-button" :class="[getPuzzleTypeClass(puzzleItem)]">{{puzzleItem.year}}</div>
                                 </div>
-                                <div class="puzzle-zone-meta">
-                                    <div class="puzzle-button puzzle-meta-finished">终结点A</div>
+                                <div class="puzzle-zone-meta" v-if="yearList.meta_type !== 0">
+                                    <div class="puzzle-button" :class="[getPuzzleMetaTypeClass(yearList.meta_type)]">{{yearList.meta_name}}</div>
                                 </div>
-                            </div>
-                            <div class="main-area-zone zone-activated">
-                                
-                            </div>
-                            <div class="main-area-zone zone-activated">
-                                
-                            </div>
-                            <div class="main-area-zone zone-activated">
-                                
-                            </div>
-                            <div class="main-area-zone zone-inactive">
-                                
-                            </div>
-                            <div class="main-area-zone zone-inactive">
-                                
                             </div>
                         </div>
-                        <div class="main-area-meta-entrace">
+                        <div class="main-area-meta-entrace" :class="[(finalMetaType === 2 ? 'meta-clear' : '')]" v-if="finalMetaType !== 0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                 <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                             </svg>
@@ -59,19 +61,39 @@
                 </div>
             </div>
         </div>
+        <!--能量扣除确认对话框-->
+        <div class="modal fade" id="ppConfirmDialog" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="ppconfirm" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content text-light bg-dark">
+                    <div class="modal-header bg-warning">
+                        <h4 class="modal-title" id="ppconfirm" style="color: black;">能量消耗确认</h4>
+                        <button type="button" class="btn-close" aria-label="Close" @click="ppConfirmMessage.confirm(false)"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>{{ppConfirmMessage.message}}</div>
+                        <div class="mt-5" style="text-align: center;">本次消耗：{{ppConfirmMessage.pp}}</div>
+                        <div class="mt-2" style="text-align: center;">消耗后： {{powerPointDynamic}} ➔ {{powerPointDynamic - ppConfirmMessage.pp}}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="ppConfirmMessage.confirm(true)">确认</button>
+                        <button type="button" class="btn btn-secondary" @click="ppConfirmMessage.confirm(false)">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--操作提示对话框-->
         <div class="modal fade" id="readTipsDialog" tabindex="-1" role="dialog" aria-labelledby="readTips" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
-            <div class="modal-content text-light bg-dark">
-                <div class="modal-header bg-info">
-                    <h4 class="modal-title" id="readTips">阅读信件</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-content text-light bg-dark">
+                    <div class="modal-header bg-info">
+                        <h4 class="modal-title" id="readTips">阅读信件</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" v-html="readTipsContent"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    </div>
                 </div>
-                <div class="modal-body" v-html="readTipsContent"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                </div>
-            </div>
             </div>
         </div>
     </div>
@@ -107,7 +129,7 @@
             &:active {
                 filter: brightness(0.9);
             }
-            .year-explorer-input{
+            .year-explorer-input {
                 font-weight: bold;
                 font-size: 24px;
                 line-height: 35px;
@@ -118,6 +140,12 @@
                 margin-top: 14px;
                 margin-left: 75px;
                 text-align: center;
+            }
+            .dropdown-menu {
+                width: 95px;
+                min-width: auto !important;
+                height: 450px;
+                overflow-y: auto;
             }
         }
         .power-point-bar {
@@ -137,7 +165,38 @@
             }
         }
         .left-header-bar{
+            display: flex;
             width: 129px;
+            .left-header-button {
+                border: 1.3px #000000 solid;
+                background-color: #3f3f3f;
+                height: 35px;
+                width: 35px;
+                color: white;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: all 0.15s ease-in-out;
+                &:hover {
+                    filter: brightness(1.1);
+                }
+                &:active {
+                    filter: brightness(0.9);
+                }
+            }
+            .button-group-start {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                border-right: 0;
+            }
+            .button-group-middle {
+                border-right: 0;
+            }
+            .button-group-end {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
         }
     }
     .main-area-zone-list {
@@ -219,6 +278,14 @@
         animation: bounce-up-down 3s ease-in-out infinite;
         text-align: center;
         margin-top: 15px;
+        transition: all 0.15s ease-in-out;
+        &:hover {
+            filter: brightness(1.2);
+            animation: none;
+        }
+        &:active {
+            filter: brightness(0.8);
+        }
     }
     .meta-clear {
         color: #32b491;
@@ -238,8 +305,8 @@
 </style>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Modal } from 'bootstrap';
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { Modal, Tooltip } from 'bootstrap';
 import gConst from "../gstatus/const";
 import { fetchPostWithSign, defaultApiErrorAction } from "../utils/fetchPost";
 import { marked } from 'marked';
@@ -247,6 +314,26 @@ import type { BasicResponse } from '../utils/fetchPost';
 
 const explorerYear = ref(2022);
 const readTipsContent = ref('');
+
+onMounted(async () => {
+    await loadDetail();
+    if (localStorage.getItem('readMainHelp') !== "1") {
+        await showTipsContent();
+    }
+    timer.value = setInterval(() => {
+        getPowerPointDynamic();
+    }, 30000);
+
+    //init bs-tooltip
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map((tooltipTriggerEl) => {
+        return new Tooltip(tooltipTriggerEl)
+    })
+});
+onBeforeUnmount(() => {
+    clearInterval(timer.value!);
+    timer.value = null;
+});
 
 async function showTipsContent() {
     let api = gConst.apiRoot + "/play/get-main-help";
@@ -259,9 +346,153 @@ async function showTipsContent() {
         defaultApiErrorAction(data);
     }
 
-    const el = document.getElementById("readTipsDialog");
-    if (!el) return;
-    let modal = new Modal(el);
-    modal.show();
+    nextTick(() => {
+        const el = document.getElementById("readTipsDialog");
+        if (!el) return;
+        let modal = new Modal(el);
+        modal.show();
+        localStorage.setItem('readMainHelp', '1');
+    });
+}
+
+interface GetYearListResponse extends BasicResponse {
+    data: SimplePuzzleGroup[];
+    final_meta_type: number;
+    power_point: number;
+    power_point_calc_time: number;
+    power_point_increase_rate: number;
+    time_probe_cost: number;
+}
+
+interface SimplePuzzleGroup {
+    pgid: number;
+    group_name: string;
+    puzzles: SimplePuzzle[];
+    meta_type: number;
+    meta_name: string;
+    unlock_cost: number;
+}
+
+interface SimplePuzzle {
+    year: number;
+    type: number;
+}
+
+const yearListData = ref<SimplePuzzleGroup[]>([]);
+const finalMetaType = ref(0);
+const powerPoint = ref(0);
+const powerPointCalcTime = ref(0);
+const powerPointIncreaseRate = ref(0);
+const timeProbeCost = ref(0);
+
+const powerPointDynamic = ref(0); 
+function getPowerPointDynamic() {
+    powerPointDynamic.value = powerPoint.value + Math.floor((new Date().getTime() - powerPointCalcTime.value) / 60000) * powerPointIncreaseRate.value;
+    console.log("update power point dynamic", powerPointDynamic.value);
+}
+const timer = ref<NodeJS.Timer | null>();
+
+async function loadDetail() {
+    let api = gConst.apiRoot + "/play/get-year-list";
+    let res = await fetchPostWithSign(api, {});
+    let data = await res.json() as GetYearListResponse;
+
+    if (data.status == 1) {
+        yearListData.value = data.data;
+        finalMetaType.value = data.final_meta_type;
+        powerPoint.value = data.power_point;
+        powerPointCalcTime.value = data.power_point_calc_time;
+        powerPointIncreaseRate.value = data.power_point_increase_rate;
+        timeProbeCost.value = data.time_probe_cost;
+        getPowerPointDynamic();
+    } else {
+        defaultApiErrorAction(data);
+    }
+}
+
+const getAreaBackgroundClass = (spg: SimplePuzzleGroup) => {
+    if (spg.puzzles && spg.puzzles.length > 0) {
+        return "zone-activated";
+    } else {
+        return "zone-inactive";
+    }
+}
+const getPuzzleTypeClass = (sp: SimplePuzzle) => {
+    if (sp.type === 2) return "puzzle-button-finished";
+    else if (sp.type === 1) return "puzzle-button-activated";
+    else return "puzzle-button-inactive";
+}
+const getPuzzleMetaTypeClass = (meta_type: number) => {
+    if (meta_type === 2) return "puzzle-meta-finished";
+    else if (meta_type === 1) return "puzzle-meta-activated";
+    else return "";
+}
+
+const yearSelectionList = ref<number[]>([...Array.from({length: 400}).map((a, i) => i + 1701)]);
+
+async function showExplorerdYearHistory() {
+
+}
+
+async function showPuzzleStat() {
+
+}
+
+interface PpConfirmMessage {
+    message: string;
+    pp: number;
+    confirm: (result: boolean) => void;
+}
+const ppConfirmMessage = ref<PpConfirmMessage>({message: '', pp: 0, confirm: () => {}});
+function powerPointConfirm(message: string, pp: number) {
+    return new Promise((res, rej) => {
+        const el = document.getElementById("ppConfirmDialog");
+        if (!el) return;
+        let modal = new Modal(el);
+        modal.show();
+
+        ppConfirmMessage.value = {
+            message,
+            pp,
+            confirm: (result: boolean) => {
+                modal.hide();
+                res(result);
+            }
+        };
+    });
+}
+
+interface YearProbeResponse extends BasicResponse {
+    extra_message: string;
+}
+const yearProbeResult = ref('');
+const yearProbeMessage = ref('');
+async function sendYearProbe(e: Event) {
+    if (e && e.target && e.type === "click") {
+        let targetEl = e.target as Element;
+        if (targetEl.tagName === "INPUT") return;
+    }
+
+    let result = await powerPointConfirm(`正在准备探测 ${explorerYear.value} 年。探测将会消耗能量，确定要探测吗？`, timeProbeCost.value);
+    if (!result) return;
+
+    let api = gConst.apiRoot + "/play/probe-year";
+    let res = await fetchPostWithSign(api, {year: explorerYear.value});
+    let data = await res.json() as YearProbeResponse;
+
+    if (data.status == 1) {
+        yearProbeResult.value = marked(data.message);
+        yearProbeMessage.value = data.extra_message;
+
+        console.log(yearProbeMessage.value);
+        console.log(yearProbeResult.value);
+
+        nextTick(async () => {
+            await loadDetail();
+        });
+    } else {
+        defaultApiErrorAction(data);
+    }
+
 }
 </script>
