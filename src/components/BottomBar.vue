@@ -159,6 +159,26 @@
             </div>
         </div>
     </div>
+    <!--能量扣除确认对话框-->
+    <div class="modal fade" id="ppConfirmDialog" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="ppconfirm" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-light bg-dark">
+                <div class="modal-header bg-warning">
+                    <h4 class="modal-title" id="ppconfirm" style="color: black;">能量消耗确认</h4>
+                    <button type="button" class="btn-close" aria-label="Close" @click="ppConfirmMessage.confirm(false)"></button>
+                </div>
+                <div class="modal-body">
+                    <div>{{ppConfirmMessage.message}}</div>
+                    <div class="mt-5" style="text-align: center;">本次消耗：{{ppConfirmMessage.pp}}</div>
+                    <div class="mt-2" style="text-align: center;">消耗后： {{globalStatus.powerPointDynamic}} ➔ {{globalStatus.powerPointDynamic - ppConfirmMessage.pp}}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="ppConfirmMessage.confirm(true)">确认</button>
+                    <button type="button" class="btn btn-secondary" @click="ppConfirmMessage.confirm(false)">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -219,6 +239,7 @@ import useTipsPart from './parts/tips';
 import useAnswerHistory from './parts/answerHistory';
 import useCheckAnswer from './parts/checkAnswer';
 import useMessage from './parts/message';
+import { ppConfirmMessage } from './parts/ppConfirm';
 
 const router = useRouter();
 

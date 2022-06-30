@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <div class="power-point-bar" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'当前能量增速：' + powerPointIncreaseRate + ' /min'">
-                                <div class="power-point-number">{{ powerPointDynamic }}</div>
+                                <div class="power-point-number">{{ globalStatus.powerPointDynamic }}</div>
                             </div>
                         </div>
                         <div class="main-area-zone-list">
@@ -61,32 +61,12 @@
                 </div>
             </div>
         </div>
-        <!--能量扣除确认对话框-->
-        <div class="modal fade" id="ppConfirmDialog" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="ppconfirm" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content text-light bg-dark">
-                    <div class="modal-header bg-warning">
-                        <h4 class="modal-title" id="ppconfirm" style="color: black;">能量消耗确认</h4>
-                        <button type="button" class="btn-close" aria-label="Close" @click="ppConfirmMessage.confirm(false)"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div>{{ppConfirmMessage.message}}</div>
-                        <div class="mt-5" style="text-align: center;">本次消耗：{{ppConfirmMessage.pp}}</div>
-                        <div class="mt-2" style="text-align: center;">消耗后： {{powerPointDynamic}} ➔ {{powerPointDynamic - ppConfirmMessage.pp}}</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="ppConfirmMessage.confirm(true)">确认</button>
-                        <button type="button" class="btn btn-secondary" @click="ppConfirmMessage.confirm(false)">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!--操作提示对话框-->
         <div class="modal fade" id="readTipsDialog" tabindex="-1" role="dialog" aria-labelledby="readTips" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
                 <div class="modal-content text-light bg-dark">
                     <div class="modal-header bg-info">
-                        <h4 class="modal-title" id="readTips">阅读信件</h4>
+                        <h4 class="modal-title" id="readTips" style="color: black;">阅读信件</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" v-html="readTipsContent"></div>
@@ -308,13 +288,15 @@
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { Modal, Tooltip } from 'bootstrap';
 import gConst from "../gstatus/const";
+import globalStatus from '../gstatus/status';
 import { fetchPostWithSign, defaultApiErrorAction } from "../utils/fetchPost";
+import { powerPointConfirm } from '../components/parts/ppConfirm';
 import { marked } from 'marked';
 import type { BasicResponse } from '../utils/fetchPost';
 
 const explorerYear = ref(2022);
 const readTipsContent = ref('');
-
+const timer = ref<NodeJS.Timer | null>();
 onMounted(async () => {
     await loadDetail();
     if (localStorage.getItem('readMainHelp') !== "1") {
@@ -385,12 +367,10 @@ const powerPointCalcTime = ref(0);
 const powerPointIncreaseRate = ref(0);
 const timeProbeCost = ref(0);
 
-const powerPointDynamic = ref(0); 
 function getPowerPointDynamic() {
-    powerPointDynamic.value = powerPoint.value + Math.floor((new Date().getTime() - powerPointCalcTime.value) / 60000) * powerPointIncreaseRate.value;
-    console.log("update power point dynamic", powerPointDynamic.value);
+    globalStatus.powerPointDynamic = powerPoint.value + Math.floor((new Date().getTime() - powerPointCalcTime.value) / 60000) * powerPointIncreaseRate.value;
+    console.log("update power point dynamic", globalStatus.powerPointDynamic);
 }
-const timer = ref<NodeJS.Timer | null>();
 
 async function loadDetail() {
     let api = gConst.apiRoot + "/play/get-year-list";
@@ -436,30 +416,6 @@ async function showExplorerdYearHistory() {
 
 async function showPuzzleStat() {
 
-}
-
-interface PpConfirmMessage {
-    message: string;
-    pp: number;
-    confirm: (result: boolean) => void;
-}
-const ppConfirmMessage = ref<PpConfirmMessage>({message: '', pp: 0, confirm: () => {}});
-function powerPointConfirm(message: string, pp: number) {
-    return new Promise((res, rej) => {
-        const el = document.getElementById("ppConfirmDialog");
-        if (!el) return;
-        let modal = new Modal(el);
-        modal.show();
-
-        ppConfirmMessage.value = {
-            message,
-            pp,
-            confirm: (result: boolean) => {
-                modal.hide();
-                res(result);
-            }
-        };
-    });
 }
 
 interface YearProbeResponse extends BasicResponse {
