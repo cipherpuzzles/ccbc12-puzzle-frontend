@@ -6,6 +6,7 @@ import ProloguePage from '../views/ProloguePage.vue';
 import PuzzlesPage from '../views/PuzzlesPage.vue';
 import PrefacePage from '../views/PrefacePage.vue';
 import MainPage from '../views/MainPage.vue';
+import YearDetailPage from '../views/YearDetailPage.vue';
 
 const routes = [
     {
@@ -31,6 +32,10 @@ const routes = [
     {
         path: "/main",
         component: MainPage
+    },
+    {
+        path: "/year/:yn",
+        component: YearDetailPage
     }
 ];
 
