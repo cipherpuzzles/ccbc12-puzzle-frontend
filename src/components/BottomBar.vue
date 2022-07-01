@@ -30,7 +30,7 @@
                             <li class="bg-danger" v-if="unreadAnnouncement > 0"><a class="dropdown-item" href="https://ccbc12.cipherpuzzles.com/announcement" target="_blank">新公告 {{ unreadAnnouncement }} 条未读</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#">返回时光机</a></li>
+                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><router-link class="nav-link" to="/main">返回时光机</router-link></li>
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(parseInt($route.params.pid as string))">显示提示</a></li>
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.pid as string))">答题记录</a></li>
                 </ul>

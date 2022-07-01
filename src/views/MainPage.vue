@@ -7,9 +7,7 @@
                         <div class="main-area-header">
                             <div class="left-header-bar">
                                 <button class="left-header-button button-group-start" @click="showTipsContent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="阅读说明信件">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
-                                        <path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
                                 </button>
                                 <button class="left-header-button button-group-middle" @click="showExplorerdYearHistory" data-bs-toggle="tooltip" data-bs-placement="bottom" title="显示已探测年份列表">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
@@ -18,13 +16,8 @@
                                     </svg>
                                 </button>
                                 <button class="left-header-button button-group-end" @click="showPuzzleStat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="查看平行世界时间线">
-                                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF">
-                                        <g><rect fill="none" height="24" width="24"/></g>
-                                        <g>
-                                            <g>
-                                                <path d="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10C22,6.48,17.52,2,12,2z M12,19c-0.83,0-1.5-0.67-1.5-1.5h3 C13.5,18.33,12.83,19,12,19z M15,16.5H9V15h6V16.5z M14.97,14H9.03C7.8,13.09,7,11.64,7,10c0-2.76,2.24-5,5-5s5,2.24,5,5 C17,11.64,16.2,13.09,14.97,14z"/>
-                                            </g>
-                                        </g>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                                        <path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
                                     </svg>
                                 </button>
                             </div>
@@ -45,7 +38,8 @@
                                 :class="[ getAreaBackgroundClass(yearList) ]">
                                 <div class="puzzle-zone-top" v-if="yearList.puzzles && yearList.puzzles.length > 0">
                                     <h5>{{yearList.group_name}}</h5>
-                                    <div v-for="puzzleItem in yearList.puzzles" :key="puzzleItem.year" class="puzzle-button" :class="[getPuzzleTypeClass(puzzleItem)]">{{puzzleItem.year}}</div>
+                                    <div v-for="puzzleItem in yearList.puzzles" :key="puzzleItem.year" class="puzzle-button" :class="[getPuzzleTypeClass(puzzleItem)]" 
+                                        @click="doPuzzleButton(puzzleItem, yearList)">{{puzzleItem.year}}</div>
                                 </div>
                                 <div class="puzzle-zone-meta" v-if="yearList.meta_type !== 0">
                                     <div class="puzzle-button" :class="[getPuzzleMetaTypeClass(yearList.meta_type)]">{{yearList.meta_name}}</div>
@@ -76,6 +70,45 @@
                 </div>
             </div>
         </div>
+        <!--探测结果对话框-->
+        <div class="modal fade" id="probeResultDialog" tabindex="-1" role="dialog" aria-labelledby="probeResult" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
+                <div class="modal-content text-light bg-dark">
+                    <div class="modal-header bg-info">
+                        <h4 class="modal-title" id="probeResult" style="color: black;">探测结果</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div v-if="yearProbeMessage" class="alert alert-secondary" role="alert">{{yearProbeMessage}}</div>
+                        <div v-if="yearProbeResult" v-html="yearProbeResult"></div>
+                        <div v-else style="color: #999999; text-align: center;">什么都没探测到</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--探测年份列表对话框-->
+        <div class="modal fade" id="probedYearListDialog" tabindex="-1" role="dialog" aria-labelledby="probedList" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
+                <div class="modal-content text-light bg-dark">
+                    <div class="modal-header bg-info">
+                        <h4 class="modal-title" id="probedList" style="color: black;">已探测的年份</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>此处列出所有已探测的年份，包括主动探测和自动探测。存在时间奇点的年份使用浅灰色底色标出。</div>
+                        <div class="probed-year-list-wrapper">
+                            <div v-for="probedYear in probedYearList" :key="'es=' + probedYear.year" class="probed-year-item" :class="[probedYear.is_puzzle ? 'probed-year-puzzle' : '']">{{probedYear.year}}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -98,9 +131,9 @@
         padding-left: 135px;
         padding-right: 135px;
         .year-explorer-bar {
-            background-image: url('../assets/frame/input_year.svg');
-            height: 65px;
-            width: 213px;
+            background-image: url('../assets/frame/year_input.svg');
+            height: 66px;
+            width: 202px;
             transition: all 0.15s ease-in-out;
             cursor: pointer;
             &:hover {
@@ -110,19 +143,19 @@
                 filter: brightness(0.9);
             }
             .year-explorer-input {
+                border: 0;
                 font-weight: bold;
                 font-size: 24px;
                 line-height: 35px;
                 background: transparent;
-                border: 0;
-                width: 90px;
+                width: 88px;
                 height: 35px;
                 margin-top: 14px;
-                margin-left: 75px;
+                margin-left: 58px;
                 text-align: center;
             }
             .dropdown-menu {
-                width: 95px;
+                width: 92px;
                 min-width: auto !important;
                 height: 450px;
                 overflow-y: auto;
@@ -148,10 +181,10 @@
             display: flex;
             width: 129px;
             .left-header-button {
-                border: 1.3px #000000 solid;
+                border: 2px #000000 solid;
                 background-color: #3f3f3f;
-                height: 35px;
-                width: 35px;
+                height: 40px;
+                width: 40px;
                 color: white;
                 padding: 0;
                 display: flex;
@@ -168,10 +201,10 @@
             .button-group-start {
                 border-top-left-radius: 5px;
                 border-bottom-left-radius: 5px;
-                border-right: 0;
+                border-right: 1px rgb(86,86,86) solid;
             }
             .button-group-middle {
-                border-right: 0;
+                border-right: 1px rgb(86,86,86) solid;
             }
             .button-group-end {
                 border-top-right-radius: 5px;
@@ -271,6 +304,21 @@
         color: #32b491;
     }
 }
+.probed-year-list-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    .probed-year-item {
+        height: 60px;
+        width: 150px;
+        text-align: center;
+        font-weight: bold;
+        line-height: 60px;
+    }
+    .probed-year-puzzle {
+        background-color: #afafaf;
+        color: black;
+    }
+}
 @keyframes bounce-up-down {
     0% {
         transform: translateY(0);
@@ -292,7 +340,10 @@ import globalStatus from '../gstatus/status';
 import { fetchPostWithSign, defaultApiErrorAction } from "../utils/fetchPost";
 import { powerPointConfirm } from '../components/parts/ppConfirm';
 import { marked } from 'marked';
+import { useRouter } from "vue-router";
 import type { BasicResponse } from '../utils/fetchPost';
+
+const router = useRouter();
 
 const explorerYear = ref(2022);
 const readTipsContent = ref('');
@@ -410,8 +461,32 @@ const getPuzzleMetaTypeClass = (meta_type: number) => {
 
 const yearSelectionList = ref<number[]>([...Array.from({length: 400}).map((a, i) => i + 1701)]);
 
-async function showExplorerdYearHistory() {
+interface ProbedYear {
+    year: number;
+    is_puzzle: number;
+}
+interface GetProbedYearListResponse extends BasicResponse {
+    data: ProbedYear[];
+}
+const probedYearList = ref<ProbedYear[]>([]);
 
+async function showExplorerdYearHistory() {
+    let api = gConst.apiRoot + "/play/get-probed-year";
+    let res = await fetchPostWithSign(api, {});
+    let data = await res.json() as GetProbedYearListResponse;
+
+    if (data.status == 1) {
+        probedYearList.value = data.data;
+
+        nextTick(async () => {
+            const el = document.getElementById("probedYearListDialog");
+            if (!el) return;
+            let modal = new Modal(el);
+            modal.show();
+        });
+    } else {
+        defaultApiErrorAction(data);
+    }
 }
 
 async function showPuzzleStat() {
@@ -440,15 +515,43 @@ async function sendYearProbe(e: Event) {
         yearProbeResult.value = marked(data.message);
         yearProbeMessage.value = data.extra_message;
 
-        console.log(yearProbeMessage.value);
-        console.log(yearProbeResult.value);
-
         nextTick(async () => {
+            const el = document.getElementById("probeResultDialog");
+            if (!el) return;
+            let modal = new Modal(el);
+            modal.show();
+
             await loadDetail();
         });
     } else {
         defaultApiErrorAction(data);
     }
+}
 
+async function doPuzzleButton(puzzleItem: SimplePuzzle, yearList: SimplePuzzleGroup) {
+    if (puzzleItem.type === 0) {
+        //未解锁
+        let unlockResult = await powerPointConfirm(`正在准备详细扫描位于 ${puzzleItem.year} 年的时间奇点，确定要扫描吗？注意：一旦你成功扭转时间奇点，扫描时消耗的能量将会返还。`, yearList.unlock_cost);
+        if (!unlockResult) return;
+
+        //解锁
+        let api = gConst.apiRoot + "/play/unlock-puzzle";
+        let res = await fetchPostWithSign(api, {
+            year: puzzleItem.year
+        });
+        let data = await res.json() as BasicResponse;
+
+        if (data.status == 1) {
+            nextTick(async () => {
+                await loadDetail();
+            });
+        } else {
+            defaultApiErrorAction(data);
+        }
+        return;
+    }
+
+    //已解锁，直接跳转到详细页面
+    router.push(`/year/${puzzleItem.year}`);
 }
 </script>
