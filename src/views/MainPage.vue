@@ -342,6 +342,7 @@ import { powerPointConfirm } from '../components/parts/ppConfirm';
 import { marked } from 'marked';
 import { useRouter } from "vue-router";
 import type { BasicResponse } from '../utils/fetchPost';
+import isLogin from '../utils/isLogin';
 
 const router = useRouter();
 
@@ -349,6 +350,11 @@ const explorerYear = ref(2022);
 const readTipsContent = ref('');
 const timer = ref<NodeJS.Timer | null>();
 onMounted(async () => {
+    if (!isLogin()) {
+        router.push('/');
+        return;
+    }
+    
     await loadDetail();
     if (localStorage.getItem('readMainHelp') !== "1") {
         await showTipsContent();

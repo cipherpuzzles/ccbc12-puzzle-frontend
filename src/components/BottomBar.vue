@@ -31,14 +31,14 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><router-link class="nav-link" to="/main">返回时光机</router-link></li>
-                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(parseInt($route.params.pid as string))">显示提示</a></li>
-                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.pid as string))">答题记录</a></li>
+                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(parseInt($route.params.yn as string))">TIPS</a></li>
+                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.yn as string))">提交记录</a></li>
                 </ul>
                 <ul class="navbar-nav"  v-if="$route.path.indexOf('year') != -1">
-                    <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.pid as string))">
+                    <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.yn as string))">
                         <input class="form-control me-2 mb-2 mb-md-0 bg-dark text-light" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
                     </form>
-                    <li class="nav-item me-2"><button class="btn btn-outline-success" @click="sendAnswer(parseInt($route.params.pid as string))">提交</button></li>
+                    <li class="nav-item me-2"><button class="btn btn-outline-success" @click="sendAnswer(parseInt($route.params.yn as string))">提交</button></li>
                 </ul>
             </div>
         </div>
@@ -46,28 +46,63 @@
     <div class="modal fade" id="puzzleTips" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="puzzleTipsDialogHeader" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
             <div class="modal-content bg-dark text-light">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="puzzleTipsDialogHeader">提示</h5>
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-black" id="puzzleTipsDialogHeader">超验信息原型系统<span style="color: #087a91;">（TIPS）</span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="text-info mb-4">
-                        能量点： {{powerPoint}}
-                    </div>
-                    <div class="container-fluid mt-4">
-                        <div v-for="tip in answerTips" :key="tip.tips_id" class="mb-4">
-                            <div class="d-flex justify-content-between">
-                                <div><h5>提示{{tip.tip_num}}：{{tip.title}}
-                                    <span class="badge bg-secondary" v-if="tip.is_open == 0">消耗 {{tip.cost}} 解锁</span>
-                                    <span class="badge bg-success" v-else>已解锁</span>
-                                </h5>
-                                </div><div>
-                                <button v-if="tip.is_open == 0" class="btn btn-secondary" @click="unlockTip(parseInt($route.params.pid as string), tip.tip_num)">解锁</button></div>
-                            </div>
-                            <div v-html="tip.content_html"></div>
+                    <div class="container-fluid mt-4 text-center" v-if="tipsStatus.is_tip_available === 0">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" 
+                                :aria-valuenow="tipsStatus.tip_available_progress" aria-valuemin="0" aria-valuemax="100" :style="{width: tipsStatus.tip_available_progress + '%'}"></div>
                         </div>
-                        <div v-if="answerTips.length == 0">
-                            暂时没有提示，说不定过一段时间回来看看会有。
+                        <div class="mt-4">正在分析平行宇宙特征，TIPS 将于 {{ formatTimestamp(tipsStatus.tip_available_time) }} 可用。</div>
+                    </div>
+                    <div class="container-fluid mt-4" v-else>
+                        <div class="text-info mb-4">
+                            <div>在当前时间点运行 TIPS 消耗的能量：{{tipsStatus.unlock_cost}} / 当前总能量： {{globalStatus.powerPointDynamic}} </div>
+                        </div>
+                        <hr/>
+                        <div>
+                            <h4>“锦囊”</h4>
+                            <p class="text-secondary">从平行宇宙的历史数据中提取有关于此时的信息。</p>
+                            <div v-for="tip in answerTips" :key="tip.tips_id" class="mb-4">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5>#{{tip.tip_num}} &nbsp; {{tip.title}}
+                                            <span class="badge bg-success" v-if="tip.is_open === 1">已解锁</span>
+                                        </h5>
+                                    </div>
+                                    <div>
+                                        <button v-if="tip.is_open == 0" class="btn btn-secondary" @click="unlockTip(parseInt($route.params.yn as string), tip.tip_num)">提取</button>
+                                    </div>
+                                </div>
+                                <div v-html="tip.content_html"></div>
+                            </div>
+                            <div v-if="answerTips.length == 0" class="text-center">
+                                <p>目前 TIPS 无法为你分析到任何内容。这可能是其他平行宇宙中并未发生过类似的事件，过一段时间再回来查看可能会出现新的信息。</p>
+                                <p>你仍然可以请求加强扫描“神谕”。</p>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div>
+                            <h4>“神谕”</h4>
+                            <div class="d-flex justify-content-between">
+                                <p class="text-secondary">对平行宇宙的加强扫描。填入当前的已知信息，在未来获取更有价值的信息。</p>
+                                <button class="btn btn-secondary" @click="addOracleReq(parseInt($route.params.yn as string))">请求</button>
+                            </div>
+                            <div v-for="oracle in oracles" :key="oracle.oracle_id" class="mt-4 mb-4 d-flex justify-content-between">
+                                <div>
+                                    <span>Oracle #{{oracle.oracle_id}}</span>&nbsp;
+                                    <span class="badge bg-success" v-if="oracle.is_reply === 1">已回复</span>
+                                    <span class="badge bg-secondary" v-else>未回复</span>
+                                </div>
+                                <div>
+                                    <span v-if="nowTimestamp < oracle.unlock_time">{{formatTimestamp(oracle.unlock_time)}} 可查看结果</span>&nbsp;
+                                    <button v-if="oracle.is_reply === 1" class="btn btn-secondary" @click="openOracle(oracle.oracle_id)">查看</button>
+                                    <button v-else class="btn btn-info" @click="openOracle(oracle.oracle_id)">编辑</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -179,6 +214,37 @@
             </div>
         </div>
     </div>
+    <!--Oracle编辑对话框-->
+    <div class="modal fade" id="oracleEditDialog" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="oracleEdit" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-xl">
+            <div class="modal-content text-light bg-dark">
+                <div class="modal-header bg-warning">
+                    <h4 class="modal-title" id="oracleEdit" style="color: black;">Oracle #1</h4>
+                    <button type="button" class="btn-close" aria-label="Close" @click="ppConfirmMessage.confirm(false)"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <h4>提交已知信息</h4>
+                                <form @submit.prevent="sendMail">
+                                    <div class="mb-3">
+                                        <textarea class="form-control bg-dark text-light" rows="8" placeholder="使用Markdown书写要发送的内容。" v-model="mailInfo.newMail"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary">发送</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -232,18 +298,22 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import RoleBadge from './RoleBadge.vue';
-
 import globalStatus from '../gstatus/status';
-
 import useTipsPart from './parts/tips';
 import useAnswerHistory from './parts/answerHistory';
 import useCheckAnswer from './parts/checkAnswer';
 import useMessage from './parts/message';
 import { ppConfirmMessage } from './parts/ppConfirm';
+import formatTimestamp from '../utils/formatDate';
+import { computed } from 'vue';
 
 const router = useRouter();
 
-const { answerTips, powerPoint, showTip, unlockTip, reloadTip } = useTipsPart();
+const nowTimestamp = computed(() => {
+    return (new Date()).getTime();
+});
+
+const { answerTips, oracles, tipsStatus, currentOracle, showTip, unlockTip, addOracleReq, openOracle } = useTipsPart();
 const { answerHistory, showAnswerHistory } = useAnswerHistory();
 const { answer, sendAnswer } = useCheckAnswer(router);
 const { unreadAnnouncement, unreadMessage, mailList, mailInfo, sendHeartbeat, showInbox, resetMail, reloadMail, sendMail } = useMessage();

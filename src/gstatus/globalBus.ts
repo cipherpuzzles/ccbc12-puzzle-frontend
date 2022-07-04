@@ -20,7 +20,8 @@ type EventMessageType = {
     message: {
         message: string;
         type: MessageType;
-    }
+    },
+    'puzzle-reload': void
 }
 
 const globalBus = mitt<EventMessageType>();
