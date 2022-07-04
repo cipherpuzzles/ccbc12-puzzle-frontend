@@ -219,25 +219,42 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-xl">
             <div class="modal-content text-light bg-dark">
                 <div class="modal-header bg-warning">
-                    <h4 class="modal-title" id="oracleEdit" style="color: black;">Oracle #1</h4>
-                    <button type="button" class="btn-close" aria-label="Close" @click="ppConfirmMessage.confirm(false)"></button>
+                    <h4 class="modal-title" id="oracleEdit" style="color: black;">Oracle #{{currentOracle?.oracle_id}}</h4>
+                    <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
+                    <div class="container-fluid" v-if="currentOracle">
                         <div class="row">
                             <div class="col">
                                 <h4>提交已知信息</h4>
-                                <form @submit.prevent="sendMail">
+                                <form>
                                     <div class="mb-3">
-                                        <textarea class="form-control bg-dark text-light" rows="8" placeholder="使用Markdown书写要发送的内容。" v-model="mailInfo.newMail"></textarea>
+                                        <textarea class="form-control bg-dark text-light" rows="8" placeholder="使用Markdown书写要发送的内容。" v-model="currentOracle.question_content"></textarea>
                                     </div>
-                                    <div class="mb-3">
-                                        <button type="submit" class="btn btn-primary">发送</button>
+                                    <div class="mb-3 d-flex justify-content-between" v-if="currentOracle.is_reply === 0">
+                                        <span class="text-secondary">在收到回复前可以不限次数的任意编辑已知信息。</span>
+                                        <button type="submit" class="btn btn-primary" @click="editOracle">编辑</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col">
+                                <h4>收到的回复</h4>
+                                <div class="text-center mt-4">
+                                    <div class="alert alert-success" v-if="currentOracle.is_reply === 1 && nowTimestamp < currentOracle.unlock_time">已有回复，{{ formatTimestamp(currentOracle.unlock_time)}} 后可查看内容。</div>
+                                    <div class="alert alert-warning" v-else-if="currentOracle.is_reply === 0 && nowTimestamp < currentOracle.unlock_time">还没有回复，最早 {{ formatTimestamp(currentOracle.unlock_time)}} 可查看内容。</div>
+                                    <div class="alert alert-warning" v-else-if="currentOracle.is_reply === 0 && nowTimestamp >= currentOracle.unlock_time">还没有回复，有回复后可立即查看内容。</div>
+                                </div>
+                                <div class="mt-4">
+                                    <div class="text-secondary">回复时间： {{ formatTimestamp(currentOracle.reply_time) }}</div>
+                                    <div class="mt-2" v-html="currentOracle.reply_content_html"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div v-else>未选中 Oracle</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>

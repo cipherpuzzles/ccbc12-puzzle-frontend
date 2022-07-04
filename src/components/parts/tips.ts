@@ -55,6 +55,8 @@ interface OracleItem {
     is_reply: number;
     reply_time: number;
     reply_content: string;
+    reply_content_html: string;
+    unlock_time: number;
 }
 
 export default function useTipsPart() {
@@ -190,7 +192,11 @@ export default function useTipsPart() {
         let data = await res.json() as OpenOracleResponse;
 
         if (data.status == 1) {
-            currentOracle.value = data.data;
+            let oracleItem = data.data;
+            if (oracleItem.reply_content) {
+                oracleItem.reply_content_html = marked(oracleItem.reply_content)
+            }
+            currentOracle.value = oracleItem;
 
             nextTick(() => {
                 let tipEl = document.getElementById("oracleEditDialog");
