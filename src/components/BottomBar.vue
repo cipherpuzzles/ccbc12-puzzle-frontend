@@ -227,13 +227,13 @@
                         <div class="row">
                             <div class="col">
                                 <h4>提交已知信息</h4>
-                                <form>
+                                <form @submit.prevent="editOracle">
                                     <div class="mb-3">
                                         <textarea class="form-control bg-dark text-light" rows="8" placeholder="使用Markdown书写要发送的内容。" v-model="currentOracle.question_content"></textarea>
                                     </div>
                                     <div class="mb-3 d-flex justify-content-between" v-if="currentOracle.is_reply === 0">
                                         <span class="text-secondary">在收到回复前可以不限次数的任意编辑已知信息。</span>
-                                        <button type="submit" class="btn btn-primary" @click="editOracle">编辑</button>
+                                        <button type="submit" class="btn btn-primary">编辑</button>
                                     </div>
                                 </form>
                             </div>
@@ -247,7 +247,7 @@
                                     <div class="alert alert-warning" v-else-if="currentOracle.is_reply === 0 && nowTimestamp < currentOracle.unlock_time">还没有回复，最早 {{ formatTimestamp(currentOracle.unlock_time)}} 可查看内容。</div>
                                     <div class="alert alert-warning" v-else-if="currentOracle.is_reply === 0 && nowTimestamp >= currentOracle.unlock_time">还没有回复，有回复后可立即查看内容。</div>
                                 </div>
-                                <div class="mt-4">
+                                <div class="mt-4" v-if="currentOracle.is_reply === 1">
                                     <div class="text-secondary">回复时间： {{ formatTimestamp(currentOracle.reply_time) }}</div>
                                     <div class="mt-2" v-html="currentOracle.reply_content_html"></div>
                                 </div>
@@ -330,7 +330,7 @@ const nowTimestamp = computed(() => {
     return (new Date()).getTime();
 });
 
-const { answerTips, oracles, tipsStatus, currentOracle, showTip, unlockTip, addOracleReq, openOracle } = useTipsPart();
+const { answerTips, oracles, tipsStatus, currentOracle, showTip, unlockTip, addOracleReq, openOracle, editOracle } = useTipsPart();
 const { answerHistory, showAnswerHistory } = useAnswerHistory();
 const { answer, sendAnswer } = useCheckAnswer(router);
 const { unreadAnnouncement, unreadMessage, mailList, mailInfo, sendHeartbeat, showInbox, resetMail, reloadMail, sendMail } = useMessage();

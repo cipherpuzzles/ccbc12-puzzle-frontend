@@ -34,15 +34,18 @@ globalBus.on("reload", () => {
 <style lang="scss">
 //覆盖bootstrap的默认变量
 $enable-rounded: false;
-$blue: #0144f3;
+$blue: #0046FF;
+$red: #FF4C4F;
+$orange: #FF7E00;
+$background: #1A1A1A;
 
 //引入bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 body{
   margin: 0;
-  background-color: #1a1a1a;
-  color: #FFFFFF;
+  background-color: $background;
+  color: white;
 }
 .center{
     text-align: center;

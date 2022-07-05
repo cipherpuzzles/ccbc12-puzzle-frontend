@@ -209,6 +209,40 @@ export default function useTipsPart() {
         }
     }
 
+    const editOracle = async () => {
+        if (!currentOracle.value?.oracle_id) {
+            globalBus.emit("message", {
+                type: "info",
+                message: "Oracle ID不正确"
+            });
+            return;
+        }
+
+        if (!currentOracle.value?.question_content) {
+            globalBus.emit("message", {
+                type: "info",
+                message: "内容不能为空。"
+            });
+            return;
+        }
+
+        let api = gConst.apiRoot + "/play/edit-oracle";
+        let res = await fetchPostWithSign(api, {
+            oracle_id: currentOracle.value.oracle_id,
+            question_content: currentOracle.value.question_content,
+        });
+        let data = await res.json() as BasicResponse;
+
+        if (data.status == 1) {
+            globalBus.emit("message", {
+                type: "success",
+                message: "编辑成功"
+            })
+        } else {
+            defaultApiErrorAction(data);
+        }
+    }
+
     return {
         answerTips,
         oracles,
@@ -217,6 +251,7 @@ export default function useTipsPart() {
         showTip,
         unlockTip,
         addOracleReq,
-        openOracle
+        openOracle,
+        editOracle
     }
 }
