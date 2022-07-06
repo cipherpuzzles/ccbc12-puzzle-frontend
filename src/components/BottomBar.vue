@@ -31,7 +31,7 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><router-link class="nav-link" to="/main">返回时光机</router-link></li>
-                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(parseInt($route.params.yn as string))">TIPS</a></li>
+                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(parseInt($route.params.yn as string))">HINT</a></li>
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.yn as string))">提交记录</a></li>
                 </ul>
                 <ul class="navbar-nav"  v-if="$route.path.indexOf('year') != -1">
@@ -47,7 +47,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-lg">
             <div class="modal-content bg-dark text-light">
                 <div class="modal-header bg-info">
-                    <h5 class="modal-title text-black" id="puzzleTipsDialogHeader">超验信息原型系统<span style="color: #087a91;">（TIPS）</span></h5>
+                    <h5 class="modal-title text-black" id="puzzleTipsDialogHeader">超时空信息网络运输器<span style="color: #087a91;">（HINT）</span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -56,11 +56,11 @@
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" 
                                 :aria-valuenow="tipsStatus.tip_available_progress" aria-valuemin="0" aria-valuemax="100" :style="{width: tipsStatus.tip_available_progress + '%'}"></div>
                         </div>
-                        <div class="mt-4">正在分析平行宇宙特征，TIPS 将于 {{ formatTimestamp(tipsStatus.tip_available_time) }} 可用。</div>
+                        <div class="mt-4">正在分析平行宇宙特征，HINT 将于 {{ formatTimestamp(tipsStatus.tip_available_time) }} 可用。</div>
                     </div>
                     <div class="container-fluid mt-4" v-else>
                         <div class="text-info mb-4">
-                            <div>在当前时间点运行 TIPS 消耗的能量：{{tipsStatus.unlock_cost}} / 当前总能量： {{globalStatus.powerPointDynamic}} </div>
+                            <div>在当前时间点运行 HINT 消耗的能量：{{tipsStatus.unlock_cost}} / 当前总能量： {{globalStatus.powerPointDynamic}} </div>
                         </div>
                         <hr/>
                         <div>
@@ -80,7 +80,7 @@
                                 <div v-html="tip.content_html"></div>
                             </div>
                             <div v-if="answerTips.length == 0" class="text-center">
-                                <p>目前 TIPS 无法为你分析到任何内容。这可能是其他平行宇宙中并未发生过类似的事件，过一段时间再回来查看可能会出现新的信息。</p>
+                                <p>目前 HINT 无法为你分析到任何内容。这可能是其他平行宇宙中并未发生过类似的事件，过一段时间再回来查看可能会出现新的信息。</p>
                                 <p>你仍然可以请求加强扫描“神谕”。</p>
                             </div>
                         </div>
