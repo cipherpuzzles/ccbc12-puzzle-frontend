@@ -13,7 +13,7 @@ interface CheckAnswerResponse extends BasicResponse {
 export default function useCheckAnswer(router: Router) {
     const answer = ref("");
 
-    const sendAnswer = async (pid: number) => {
+    const sendAnswer = async (year: number) => {
         let answerString = answer.value;
     
         if (answerString == null || answerString == ""){
@@ -24,7 +24,7 @@ export default function useCheckAnswer(router: Router) {
             return;
         }
     
-        if (!pid) {
+        if (!year) {
             globalBus.emit("message", {
                 type: "info",
                 message: "题目ID不正确"
@@ -34,7 +34,7 @@ export default function useCheckAnswer(router: Router) {
     
         let api = gConst.apiRoot + "/check-answer";
         let res = await fetchPostWithSign(api, {
-            pid,
+            year,
             answer: answerString
         });
         let data = await res.json() as CheckAnswerResponse;
@@ -64,7 +64,7 @@ export default function useCheckAnswer(router: Router) {
             });
     
             if(data.extend_flag == 16){
-                globalBus.emit("reload");
+                globalBus.emit("puzzle-reload");
             }
         } else {
             defaultApiErrorAction(data);
