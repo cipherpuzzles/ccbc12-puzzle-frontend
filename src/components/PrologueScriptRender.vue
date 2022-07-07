@@ -2,10 +2,10 @@
     <div class="script-wrapper" @click="scriptDoNextStep">
         <div v-for="l in screenLines">
             <p v-if="l.type == 'default'" style="color: #FFFFFF">{{ l.content }}</p>
-            <p v-if="l.type == 'player'" style="color: #3498DB">{{ l.content }}</p>
+            <p v-if="l.type == 'player'" style="color: #326CFF">{{ l.content }}</p>
             <p v-if="l.type == 'convenor'" style="color: #F561A4">{{ l.content }}</p>
             <p v-if="l.type == 'jump'" class="center">
-                <button class="btn btn-primary" @click="goNext" style="font-size: 35px">{{ l.content }}</button>
+                <button class="btn btn-primary" @click="goNext" style="font-size: 24px">{{ l.content }}</button>
             </p>
             <p v-if="l.type == 'jump-main'" class="center">
                 <img @click="goNext" class="jump-main-img" :src="JumpMainImg">
@@ -23,8 +23,11 @@
 .script-wrapper {
     width: 100%;
     min-height: 600px;
-    font-size: 35px;
+    font-size: 22px;
     cursor: pointer;
+    ::selection {
+        background: rgba(0, 0, 0, 0.1);
+    }
 }
 .next-icon {
     color: #32b491;
