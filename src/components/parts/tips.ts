@@ -57,6 +57,8 @@ interface OracleItem {
     reply_content: string;
     reply_content_html: string;
     unlock_time: number;
+    extend_function: string;
+    extend_function_render: string;
 }
 
 export default function useTipsPart() {
@@ -195,6 +197,10 @@ export default function useTipsPart() {
             let oracleItem = data.data;
             if (oracleItem.reply_content) {
                 oracleItem.reply_content_html = marked(oracleItem.reply_content)
+            }
+            if (oracleItem.extend_function) {
+                let efa = oracleItem.extend_function.split(',').sort();
+                oracleItem.extend_function_render = efa.map(e => `#${e}`).join(', ');
             }
             currentOracle.value = oracleItem;
 

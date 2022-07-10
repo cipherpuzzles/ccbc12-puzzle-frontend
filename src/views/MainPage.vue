@@ -42,7 +42,8 @@
                                         @click="doPuzzleButton(puzzleItem, yearList)">{{puzzleItem.year}}</div>
                                 </div>
                                 <div class="puzzle-zone-meta" v-if="yearList.meta_type !== 0">
-                                    <div class="puzzle-button" :class="[getPuzzleMetaTypeClass(yearList.meta_type)]">{{yearList.meta_name}}</div>
+                                    <div class="puzzle-button" :class="[getPuzzleMetaTypeClass(yearList.meta_type)]"
+                                        @click="jumpMetaButton(yearList.pgid)">{{yearList.meta_name}}</div>
                                 </div>
                             </div>
                         </div>
@@ -364,10 +365,10 @@ onMounted(async () => {
     }, 30000);
 
     //init bs-tooltip
-    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map((tooltipTriggerEl) => {
-        return new Tooltip(tooltipTriggerEl)
-    })
+        return new Tooltip(tooltipTriggerEl);
+    });
 });
 onBeforeUnmount(() => {
     clearInterval(timer.value!);
@@ -559,5 +560,8 @@ async function doPuzzleButton(puzzleItem: SimplePuzzle, yearList: SimplePuzzleGr
 
     //已解锁，直接跳转到详细页面
     router.push(`/year/${puzzleItem.year}`);
+}
+function jumpMetaButton(pgid: number) {
+    router.push(`/year/${9999990 + pgid}`);
 }
 </script>

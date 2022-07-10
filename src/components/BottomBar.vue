@@ -35,6 +35,20 @@
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.yn as string))">提交记录</a></li>
                 </ul>
                 <ul class="navbar-nav"  v-if="$route.path.indexOf('year') != -1">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" 
+                            data-bs-html="true" title="为此题目投票：<br>我喜欢这个题目<br>（队伍中每个人都可以进行不同的选择）"
+                            @click="voteButtonClick(parseInt($route.params.yn as string), 'up')">
+                            <VoteButton type="up" :status="globalStatus.currentPuzzleVoteStatus === 1 ? 'on' : 'off'"></VoteButton>
+                        </button>
+                    </li>
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" 
+                            data-bs-html="true" title="为此题目投票：<br>我不喜欢这个题目<br>（队伍中每个人都可以进行不同的选择）"
+                            @click="voteButtonClick(parseInt($route.params.yn as string), 'down')">
+                            <VoteButton type="down" :status="globalStatus.currentPuzzleVoteStatus === 2 ? 'on' : 'off'"></VoteButton>
+                        </button>
+                    </li>
                     <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.yn as string))">
                         <input class="form-control me-2 mb-2 mb-md-0 bg-dark text-light" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
                     </form>
@@ -250,6 +264,9 @@
                                 <div class="mt-4" v-if="currentOracle.is_reply === 1">
                                     <div class="text-secondary">回复时间： {{ formatTimestamp(currentOracle.reply_time) }}</div>
                                     <div class="mt-2" v-html="currentOracle.reply_content_html"></div>
+                                    <div class="mt-2" v-if="currentOracle.extend_function">
+                                        <div class="text-info">在您查看神谕的同时，您可无需能量直接解锁提示 {{ currentOracle.extend_function_render }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -320,9 +337,10 @@ import useTipsPart from './parts/tips';
 import useAnswerHistory from './parts/answerHistory';
 import useCheckAnswer from './parts/checkAnswer';
 import useMessage from './parts/message';
+import usePuzzleVote from './parts/puzzleVote';
 import { ppConfirmMessage } from './parts/ppConfirm';
 import formatTimestamp from '../utils/formatDate';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const router = useRouter();
 
@@ -334,6 +352,7 @@ const { answerTips, oracles, tipsStatus, currentOracle, showTip, unlockTip, addO
 const { answerHistory, showAnswerHistory } = useAnswerHistory();
 const { answer, sendAnswer } = useCheckAnswer(router);
 const { unreadAnnouncement, unreadMessage, mailList, mailInfo, sendHeartbeat, showInbox, resetMail, reloadMail, sendMail } = useMessage();
+const { VoteButton, voteButtonClick } = usePuzzleVote();
 
 //onCreated
 sendHeartbeat();
@@ -341,4 +360,5 @@ sendHeartbeat();
 function checkBarStatus() {
     return localStorage.getItem('navbar-step') === "bar2nd-status";
 }
+
 </script>

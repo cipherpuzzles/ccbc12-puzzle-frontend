@@ -4,8 +4,8 @@
             <div class="col">
                 <div>CCBC 12</div>
                 <h4 class="title-line">
-                    <span :class="[isYearBold ? 'title-line-bold-year' : '']">{{ puzzle.second_key }}</span>
-                    <span class="title-line-title">{{ puzzle.title }}</span>
+                    <span :class="[isYearBold ? 'title-line-bold-year' : '']" class="title-line-title" v-if="puzzle.second_key < 9900000">{{ puzzle.second_key }}</span>
+                    <span>{{ puzzle.title }}</span>
                 </h4>
             </div>
         </div>
@@ -47,11 +47,12 @@
     font-weight: bold;
 }
 .title-line-title {
-    margin-left: 2rem;
+    margin-right: 2rem;
 }
 </style>
 
 <script setup lang="ts">
+import { Tooltip } from 'bootstrap';
 import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import isLogin from '../utils/isLogin'
 import { useRoute, useRouter } from "vue-router";
@@ -111,6 +112,14 @@ onMounted(async () => {
     timer.value = setInterval(() => {
         getPowerPointDynamic();
     }, 30000);
+
+    nextTick(() => {
+        //init bs-tooltip
+        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map((tooltipTriggerEl) => {
+            return new Tooltip(tooltipTriggerEl);
+        });
+    });
 });
 onBeforeUnmount(() => {
     clearInterval(timer.value!);
@@ -130,6 +139,7 @@ interface PuzzleDetailResponse extends BasicResponse {
     power_point_calc_time: number;
     power_point_increase_rate: number;
     unlock_tip_cost: number;
+    vote_type: number;
 }
 
 function getPowerPointDynamic() {
@@ -174,6 +184,7 @@ async function loadPuzzleDetail() {
         powerPoint.value = data.power_point;
         powerPointCalcTime.value = data.power_point_calc_time;
         powerPointIncreaseRate.value = data.power_point_increase_rate;
+        globalStatus.currentPuzzleVoteStatus = data.vote_type;
         getPowerPointDynamic();
     } else {
         defaultApiErrorAction(data);
