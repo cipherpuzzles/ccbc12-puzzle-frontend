@@ -110,6 +110,78 @@
                 </div>
             </div>
         </div>
+        <!--平行世界信息对话框-->
+        <div class="modal fade" id="puzzleBoardDialog" tabindex="-1" role="dialog" aria-labelledby="puzzleBoard" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down modal-xl">
+                <div class="modal-content text-light bg-dark">
+                    <div class="modal-header bg-info">
+                        <h4 class="modal-title" id="puzzleBoard" style="color: black;">平行世界时间线</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3>其他平行世界的时间奇点情况</h3>
+                        <div>更新时间： {{ formatTimestamp(puzzleBoardCacheTime)}} （每分钟更新一次）</div>
+                        <div class="mt-2">
+                            <span>选择排序方式：</span>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="puzzleBoardQueryType" id="fcPbQType0" value="0" v-model="puzzleBoardQueryType">
+                                <label class="form-check-label" for="fcPbQType0">按首次通过时间</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="puzzleBoardQueryType" id="fcPbQType1" value="1" v-model="puzzleBoardQueryType">
+                                <label class="form-check-label" for="fcPbQType1">按总通过次数</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="puzzleBoardQueryType" id="fcPbQType2" value="2" v-model="puzzleBoardQueryType">
+                                <label class="form-check-label" for="fcPbQType2">按LIKE数量</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="puzzleBoardQueryType" id="fcPbQType3" value="3" v-model="puzzleBoardQueryType">
+                                <label class="form-check-label" for="fcPbQType3">按DISLIKE数量</label>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <table class="table table-dark table-hover">
+                                <colgroup>
+                                    <col width="80px">
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">序号</th>
+                                        <th scope="col">时间奇点</th>
+                                        <th scope="col">首次通过的平行世界</th>
+                                        <th scope="col">首次通过时间</th>
+                                        <th scope="col">总通过次数</th>
+                                        <th scope="col">LIKE</th>
+                                        <th scope="col">DISLIKE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(p, idx) in puzzleBoardResultList">
+                                        <th scope="row">{{ idx + 1 }}</th>
+                                        <td>{{ p.title}}</td>
+                                        <td>{{ p.first_solve_group_name }}</td>
+                                        <td>{{ formatTimestamp(p.first_solve_time) }}</td>
+                                        <td>{{ p.solved_group_count }}</td>
+                                        <td>{{ p.like_count }}</td>
+                                        <td>{{ p.dislike_count }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -334,7 +406,7 @@
 </style>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { Modal, Tooltip } from 'bootstrap';
 import gConst from "../gstatus/const";
 import globalStatus from '../gstatus/status';
@@ -344,6 +416,7 @@ import { marked } from 'marked';
 import { useRouter } from "vue-router";
 import type { BasicResponse } from '../utils/fetchPost';
 import isLogin from '../utils/isLogin';
+import formatTimestamp from '../utils/formatDate';
 
 const router = useRouter();
 
@@ -496,8 +569,50 @@ async function showExplorerdYearHistory() {
     }
 }
 
-async function showPuzzleStat() {
+interface PuzzleBoardItem {
+    title: string;
+    first_solve_group_name: string;
+    first_solve_time: number;
+    solved_group_count: number;
+    like_count: number;
+    dislike_count: number;
+}
+interface GetPuzzleBoardResponse extends BasicResponse {
+    cache_time: number;
+    data: PuzzleBoardItem[];
+}
 
+const puzzleBoardQueryType = ref(0);
+const puzzleBoardCacheTime = ref(0);
+const puzzleBoardResultList = ref<PuzzleBoardItem[]>([]);
+
+watch(puzzleBoardQueryType, (newVal) => {
+    queryPuzzleStat();
+}, {immediate: true});
+
+async function showPuzzleStat() {
+    await queryPuzzleStat();
+
+    nextTick(async () => {
+        const el = document.getElementById("puzzleBoardDialog");
+        if (!el) return;
+        let modal = new Modal(el);
+        modal.show();
+    });
+}
+async function queryPuzzleStat() {
+    let api = gConst.apiRoot + "/play/get-puzzle-board";
+    let res = await fetchPostWithSign(api, {
+        type: puzzleBoardQueryType.value
+    });
+    let data = await res.json() as GetPuzzleBoardResponse;
+
+    if (data.status === 1) {
+        puzzleBoardCacheTime.value = data.cache_time;
+        puzzleBoardResultList.value = data.data;
+    } else {
+        defaultApiErrorAction(data);
+    }
 }
 
 interface YearProbeResponse extends BasicResponse {
@@ -511,7 +626,7 @@ async function sendYearProbe(e: Event) {
         if (targetEl.tagName === "INPUT") return;
     }
 
-    let result = await powerPointConfirm(`正在准备探测 ${explorerYear.value} 年。探测将会消耗能量，确定要探测吗？`, timeProbeCost.value);
+    let result = await powerPointConfirm(`正在准备探测 ${explorerYear.value} 年。探测从未探测过的年份将会消耗能量，确定要探测吗？`, timeProbeCost.value);
     if (!result) return;
 
     let api = gConst.apiRoot + "/play/probe-year";

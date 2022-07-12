@@ -35,24 +35,24 @@
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.yn as string))">提交记录</a></li>
                 </ul>
                 <ul class="navbar-nav"  v-if="$route.path.indexOf('year') != -1">
-                    <li class="nav-item">
-                        <button class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" 
+                    <li class="nav-item vote-btn-icon-wrapper">
+                        <button class="btn btn-icon" data-bs-toggle="tooltip" data-bs-placement="top" 
                             data-bs-html="true" title="为此题目投票：<br>我喜欢这个题目<br>（队伍中每个人都可以进行不同的选择）"
                             @click="voteButtonClick(parseInt($route.params.yn as string), 'up')">
                             <VoteButton type="up" :status="globalStatus.currentPuzzleVoteStatus === 1 ? 'on' : 'off'"></VoteButton>
                         </button>
                     </li>
-                    <li class="nav-item me-2">
-                        <button class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" 
+                    <li class="nav-item me-2 vote-btn-icon-wrapper">
+                        <button class="btn btn-icon" data-bs-toggle="tooltip" data-bs-placement="top" 
                             data-bs-html="true" title="为此题目投票：<br>我不喜欢这个题目<br>（队伍中每个人都可以进行不同的选择）"
                             @click="voteButtonClick(parseInt($route.params.yn as string), 'down')">
                             <VoteButton type="down" :status="globalStatus.currentPuzzleVoteStatus === 2 ? 'on' : 'off'"></VoteButton>
                         </button>
                     </li>
-                    <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.yn as string))">
-                        <input class="form-control me-2 mb-2 mb-md-0 bg-dark text-light" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
+                    <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.yn as string))" data-bs-toggle="tooltip" data-bs-placement="top" :title="'回答错误将会 -' + waCost + ' 能量'">
+                        <input class="form-control me-1 mb-2 mb-md-0 bg-light text-black" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
                     </form>
-                    <li class="nav-item me-2"><button class="btn btn-outline-success" @click="sendAnswer(parseInt($route.params.yn as string))">提交</button></li>
+                    <li class="nav-item me-2"><button class="btn btn-primary" @click="sendAnswer(parseInt($route.params.yn as string))">提交</button></li>
                 </ul>
             </div>
         </div>
@@ -327,10 +327,27 @@
 .load-next-button:hover{
     background-color: #3a3a3a;
 }
+.vote-btn-icon-wrapper {
+    display: flex;
+}
+.btn-icon {
+    height: 40px;
+    width: 48px;
+    &:hover {
+        background-color: #3a3a3a;
+    }
+    &:active {
+        background-color: #2f2f2f;
+    }
+    img {
+        height: 25px;
+        width: 25px;
+    }
+}
 </style>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import RoleBadge from './RoleBadge.vue';
 import globalStatus from '../gstatus/status';
 import useTipsPart from './parts/tips';
@@ -343,9 +360,15 @@ import formatTimestamp from '../utils/formatDate';
 import { computed, onMounted } from 'vue';
 
 const router = useRouter();
+const route = useRoute();
 
 const nowTimestamp = computed(() => {
     return (new Date()).getTime();
+});
+const waCost = computed(() => {
+    let year = parseInt(route.params.yn as string);
+    if (year > 9900000) return 10;
+    else return 5;
 });
 
 const { answerTips, oracles, tipsStatus, currentOracle, showTip, unlockTip, addOracleReq, openOracle, editOracle } = useTipsPart();
