@@ -52,7 +52,7 @@ body{
 }
 .header-line{
     margin-top: 60px;
-    margin-bottom: 150px;
+    margin-bottom: 75px;
 }
 .app-main-view{
   min-height: 120vh;

@@ -50,9 +50,9 @@
                         </button>
                     </li>
                     <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.yn as string))" data-bs-toggle="tooltip" data-bs-placement="top" :title="'回答错误将会 -' + waCost + ' 能量'">
-                        <input class="form-control me-1 mb-2 mb-md-0 bg-light text-black" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
+                        <input class="form-control me-1 mb-2 mb-md-0 bg-light text-black answer-input" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
+                        <li class="nav-item me-2"><button class="btn btn-primary answer-input-submit-button" type="submit">提交</button></li>
                     </form>
-                    <li class="nav-item me-2"><button class="btn btn-primary" @click="sendAnswer(parseInt($route.params.yn as string))">提交</button></li>
                 </ul>
             </div>
         </div>
@@ -343,6 +343,14 @@
         height: 25px;
         width: 25px;
     }
+}
+.answer-input {
+    width: 286px;
+    height: 40px;
+}
+.answer-input-submit-button {
+    width: 77px;
+    height: 40px;
 }
 </style>
 

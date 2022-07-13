@@ -1,5 +1,5 @@
 <template>
-    <div class="container-md">
+    <div class="container-lg">
         <div class="row main-area-line">
             <div class="col">
                 <div class="ratio ratio-bg main-area">
@@ -47,14 +47,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="main-area-meta-entrace" :class="[(finalMetaType === 2 ? 'meta-clear' : '')]" v-if="finalMetaType !== 0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                            </svg>
-                        </div>
+                    </div>
+                    <div class="meta-hot-area">
+                        <div class="meta-screw screw-1"></div>
+                        <div class="meta-screw screw-2"></div>
+                        <div class="meta-screw screw-3"></div>
+                        <div class="meta-screw screw-4"></div>
+                        <div class="meta-screw screw-5"></div>
+                        <div class="meta-screw screw-6"></div>
+                        <div class="meta-screw screw-7"></div>
+                        <div class="meta-screw screw-8"></div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row screen-warning-info">
+            <p>注意：当前屏幕宽度不足，部分操作可能无法完成！切换至更宽的屏幕以获得完整的体验。</p>
         </div>
         <!--操作提示对话框-->
         <div class="modal fade" id="readTipsDialog" tabindex="-1" role="dialog" aria-labelledby="readTips" aria-hidden="true">
@@ -186,11 +194,17 @@
 </template>
 
 <style lang="scss" scoped>
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
 .main-area-line{
     margin-top: 65px;
 }
 .main-area {
-    //background-image: url('../assets/frame/bg.svg');
+    background-image: url('../assets/frame/bg.svg');
+    background-size: 1297px 768px;
+}
+.main-meta-area {
     background-image: url('../assets/frame/bg_meta.png');
     background-size: 1297px 768px;
 }
@@ -202,9 +216,9 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        height: 100px;
-        padding-left: 135px;
-        padding-right: 135px;
+        height: 115px;
+        padding-left: 151px;
+        padding-right: 151px;
         .year-explorer-bar {
             background-image: url('../assets/frame/year_input.svg');
             height: 66px;
@@ -290,7 +304,7 @@
     .main-area-zone-list {
         display: flex;
         justify-content: space-between;
-        margin-top: 45px;
+        margin-top: 35px;
         padding-left: 135px;
         padding-right: 135px;
         .main-area-zone {
@@ -360,24 +374,11 @@
             background-image: url('../assets/frame/button_meta_finished.svg');
         }
     }
-    .main-area-meta-entrace {
-        cursor: pointer;
-        color: #afafaf;
-        animation: bounce-up-down 3s ease-in-out infinite;
-        text-align: center;
-        margin-top: 15px;
-        transition: all 0.15s ease-in-out;
-        &:hover {
-            filter: brightness(1.2);
-            animation: none;
-        }
-        &:active {
-            filter: brightness(0.8);
-        }
-    }
-    .meta-clear {
-        color: #32b491;
-    }
+}
+.screen-warning-info {
+    margin-top: 60px;
+    font-size: 26px;
+    display: none;
 }
 .probed-year-list-wrapper {
     display: flex;
@@ -394,15 +395,289 @@
         color: black;
     }
 }
-@keyframes bounce-up-down {
-    0% {
-        transform: translateY(0);
+.meta-hot-area {
+    position: absolute;
+    .meta-screw {
+        position: absolute;
+        height: 10px;
+        width: 10px;
+        background-color: rgba(0, 255, 0, 0.5);
+        border-radius: 50%;
+        cursor: pointer;
     }
-    50% {
-        transform: translateY(-10px);
+    .screw-1 {
+        left: 117px;
+        top: 22px;
     }
-    100% {
-        transform: translateY(0);
+    .screw-2 {
+        left: 38px;
+        top: 113px;
+    }
+    .screw-3 {
+        left: 1170px;
+        top: 22px;
+    }
+    .screw-4 {
+        left: 1249px;
+        top: 113px;
+    }
+    .screw-5 {
+        left: 38px;
+        top: 633px;
+    }
+    .screw-6 {
+        left: 117px;
+        top: 724px;
+    }
+    .screw-7 {
+        left: 1249px;
+        top: 633px;
+    }
+    .screw-8 {
+        left: 1170px;
+        top: 724px;
+    }
+}
+@include media-breakpoint-down(xxl) {
+    .main-area,.main-meta-area {
+        background-size: 1116px 661px;
+    }
+    .main-area-container {
+        .main-area-header {
+            height: 100px;
+            padding-left: 125px;
+            padding-right: 125px;
+            .year-explorer-bar {
+                height: 60px;
+                width: 180px;
+                .year-explorer-input {
+                    font-size: 22px;
+                    line-height: 33px;
+                    width: 80px;
+                    height: 33px;
+                    margin-top: 12px;
+                    margin-left: 50px;
+                }
+                .dropdown-menu {
+                    width: 85px;
+                    min-width: auto !important;
+                    height: 450px;
+                    overflow-y: auto;
+                }
+            }
+            .power-point-bar {
+                height: 38px;
+                width: 120px;
+                .power-point-number{
+                    padding-right: 3px;
+                    line-height: 26px;
+                    margin-right: 9px;
+                    margin-top: 5px;
+                    margin-left: 34px;
+                    margin-bottom: 5px;
+                }
+            }
+            .left-header-bar{
+                width: 120px;
+                .left-header-button {
+                    height: 36px;
+                    width: 36px;
+                    padding: 0;
+                }
+            }
+        }
+        .main-area-zone-list {
+            margin-top: 27px;
+            padding-left: 115px;
+            padding-right: 115px;
+            .main-area-zone {
+                width: 136px;
+                height: 468px;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .puzzle-zone-top {
+                h5 {
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+            }
+            .puzzle-button {
+                width: 110px;
+                height: 30px;
+                font-size: 16px;
+                line-height: 30px;
+                + .puzzle-button{
+                    margin-top: 1px;
+                }
+            }
+        }
+    }
+    .meta-hot-area {
+        .screw-1 {
+            left: 100px;
+            top: 19px;
+        }
+        .screw-2 {
+            left: 32px;
+            top: 97px;
+        }
+        .screw-3 {
+            left: 1006px;
+            top: 19px;
+        }
+        .screw-4 {
+            left: 1074px;
+            top: 97px;
+        }
+        .screw-5 {
+            left: 32px;
+            top: 545px;
+        }
+        .screw-6 {
+            left: 100px;
+            top: 623px;
+        }
+        .screw-7 {
+            left: 1074px;
+            top: 545px;
+        }
+        .screw-8 {
+            left: 1006px;
+            top: 623px;
+        }
+    }
+}
+@include media-breakpoint-down(xl) {
+    .main-area,.main-meta-area {
+        background-size: 936px 554px;
+    }
+    .main-area-container {
+        .main-area-header {
+            height: 85px;
+            padding-left: 100px;
+            padding-right: 100px;
+            .year-explorer-bar {
+                height: 60px;
+                width: 180px;
+                .year-explorer-input {
+                    font-size: 22px;
+                    line-height: 33px;
+                    width: 80px;
+                    height: 33px;
+                    margin-top: 12px;
+                    margin-left: 50px;
+                }
+                .dropdown-menu {
+                    width: 85px;
+                    min-width: auto !important;
+                    height: 450px;
+                    overflow-y: auto;
+                }
+            }
+            .power-point-bar {
+                height: 38px;
+                width: 120px;
+                .power-point-number{
+                    padding-right: 3px;
+                    line-height: 26px;
+                    margin-right: 9px;
+                    margin-top: 5px;
+                    margin-left: 34px;
+                    margin-bottom: 5px;
+                }
+            }
+            .left-header-bar{
+                width: 120px;
+                .left-header-button {
+                    height: 36px;
+                    width: 36px;
+                    padding: 0;
+                }
+            }
+        }
+        .main-area-zone-list {
+            margin-top: 20px;
+            padding-left: 50px;
+            padding-right: 50px;
+            .main-area-zone {
+                width: 136px;
+                height: 468px;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .puzzle-zone-top {
+                h5 {
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+            }
+            .puzzle-button {
+                width: 110px;
+                height: 30px;
+                font-size: 16px;
+                line-height: 30px;
+                + .puzzle-button{
+                    margin-top: 1px;
+                }
+            }
+        }
+    }
+    .screen-warning-info {
+        margin-top: 60px;
+        font-size: 26px;
+        display: block;
+    }
+    .meta-hot-area {
+        display: none;
+    }
+}
+@include media-breakpoint-down(lg) {
+    .main-area,.main-meta-area {
+        background-size: 100%;
+    }
+    .main-area-container {
+        .main-area-header {
+            height: 85px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .main-area-zone-list {
+            margin-top: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
+            flex-wrap: wrap;
+            .main-area-zone {
+                width: 44vw;
+                height: 152vw;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                margin-bottom: 40px;
+            }
+            .puzzle-zone-top {
+                h5 {
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+            }
+            .puzzle-button {
+                width: 40vw;
+                height: 11vw;
+                font-size: 1.5rem;
+                line-height: 11vw;
+                + .puzzle-button{
+                    margin-top: 1px;
+                }
+            }
+        }
+    }
+    .screen-warning-info {
+        margin-top: 450vw;
+        font-size: 26px;
+        display: block;
+    }
+    .meta-hot-area {
+        display: none;
     }
 }
 </style>
