@@ -190,7 +190,9 @@
     margin-top: 65px;
 }
 .main-area {
-    background-image: url('../assets/frame/bg.svg');
+    //background-image: url('../assets/frame/bg.svg');
+    background-image: url('../assets/frame/bg_meta.png');
+    background-size: 1297px 768px;
 }
 .ratio-bg {
     --bs-aspect-ratio: calc(768 / 1297 * 100%);
