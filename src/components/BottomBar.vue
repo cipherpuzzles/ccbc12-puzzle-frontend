@@ -31,25 +31,25 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><router-link class="nav-link" to="/main">返回时光机</router-link></li>
-                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(parseInt($route.params.yn as string))">HINT</a></li>
-                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(parseInt($route.params.yn as string))">提交记录</a></li>
+                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showTip(yearId)">HINT</a></li>
+                    <li class="nav-item" v-if="$route.path.indexOf('year') != -1"><a class="nav-link" href="#" @click="showAnswerHistory(yearId)">提交记录</a></li>
                 </ul>
                 <ul class="navbar-nav"  v-if="$route.path.indexOf('year') != -1">
                     <li class="nav-item vote-btn-icon-wrapper">
                         <button class="btn btn-icon" data-bs-toggle="tooltip" data-bs-placement="top" 
                             data-bs-html="true" title="为此题目投票：<br>我喜欢这个题目<br>（队伍中每个人都可以进行不同的选择）"
-                            @click="voteButtonClick(parseInt($route.params.yn as string), 'up')">
+                            @click="voteButtonClick(yearId, 'up')">
                             <VoteButton type="up" :status="globalStatus.currentPuzzleVoteStatus === 1 ? 'on' : 'off'"></VoteButton>
                         </button>
                     </li>
                     <li class="nav-item me-2 vote-btn-icon-wrapper">
                         <button class="btn btn-icon" data-bs-toggle="tooltip" data-bs-placement="top" 
                             data-bs-html="true" title="为此题目投票：<br>我不喜欢这个题目<br>（队伍中每个人都可以进行不同的选择）"
-                            @click="voteButtonClick(parseInt($route.params.yn as string), 'down')">
+                            @click="voteButtonClick(yearId, 'down')">
                             <VoteButton type="down" :status="globalStatus.currentPuzzleVoteStatus === 2 ? 'on' : 'off'"></VoteButton>
                         </button>
                     </li>
-                    <form class="d-flex" @submit.prevent="sendAnswer(parseInt($route.params.yn as string))" data-bs-toggle="tooltip" data-bs-placement="top" :title="'回答错误将会 -' + waCost + ' 能量'">
+                    <form class="d-flex" @submit.prevent="sendAnswer(yearId)" data-bs-toggle="tooltip" data-bs-placement="top" :title="'回答错误将会 -' + waCost + ' 能量'">
                         <input class="form-control me-1 mb-2 mb-md-0 bg-light text-black answer-input" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
                         <li class="nav-item me-2"><button class="btn btn-primary answer-input-submit-button" type="submit">提交</button></li>
                     </form>
@@ -88,7 +88,7 @@
                                         </h5>
                                     </div>
                                     <div>
-                                        <button v-if="tip.is_open == 0" class="btn btn-secondary" @click="unlockTip(parseInt($route.params.yn as string), tip.tip_num)">提取</button>
+                                        <button v-if="tip.is_open == 0" class="btn btn-secondary" @click="unlockTip(yearId, tip.tip_num)">提取</button>
                                     </div>
                                 </div>
                                 <div v-html="tip.content_html"></div>
@@ -103,7 +103,7 @@
                             <h4>“神谕”</h4>
                             <div class="d-flex justify-content-between">
                                 <p class="text-secondary">对平行宇宙的加强扫描。填入当前的已知信息，在未来获取更有价值的信息。</p>
-                                <button class="btn btn-secondary" @click="addOracleReq(parseInt($route.params.yn as string))">请求</button>
+                                <button class="btn btn-secondary" @click="addOracleReq(yearId)">请求</button>
                             </div>
                             <div v-for="oracle in oracles" :key="oracle.oracle_id" class="mt-4 mb-4 d-flex justify-content-between">
                                 <div>
@@ -377,6 +377,10 @@ const waCost = computed(() => {
     let year = parseInt(route.params.yn as string);
     if (year > 9900000) return 10;
     else return 5;
+});
+const yearId = computed(() => {
+    if (route.path === "/last-year") return 9999999;
+    else return parseInt(route.params.yn as string);
 });
 
 const { answerTips, oracles, tipsStatus, currentOracle, showTip, unlockTip, addOracleReq, openOracle, editOracle } = useTipsPart();

@@ -7,6 +7,8 @@ import PuzzlesPage from '../views/PuzzlesPage.vue';
 import PrefacePage from '../views/PrefacePage.vue';
 import MainPage from '../views/MainPage.vue';
 import YearDetailPage from '../views/YearDetailPage.vue';
+import YearMetaPage from '../views/YearMetaPage.vue';
+import FinalEndPage from '../views/FinalEndPage.vue';
 
 const routes = [
     {
@@ -32,6 +34,14 @@ const routes = [
     {
         path: "/main",
         component: MainPage
+    },
+    {
+        path: "/last-year",
+        component: YearMetaPage  
+    },
+    {
+        path: "/finalend",
+        component: FinalEndPage
     },
     {
         path: "/year/:yn",

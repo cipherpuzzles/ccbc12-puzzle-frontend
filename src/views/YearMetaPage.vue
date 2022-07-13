@@ -4,7 +4,6 @@
             <div class="col">
                 <div>CCBC 12</div>
                 <h4 class="title-line">
-                    <span :class="[isYearBold ? 'title-line-bold-year' : '']" class="title-line-title" v-if="puzzle.second_key < 9900000">{{ puzzle.second_key }}</span>
                     <span>{{ puzzle.title }}</span>
                 </h4>
             </div>
@@ -14,22 +13,22 @@
                 <div v-html="renderedHtml"></div>
             </div>
         </div>
+        <div class="row" v-if="puzzle.html">
+            <div class="col">
+                <div v-html="renderPart1" id="puzzleHtml"></div>
+            </div>
+        </div>
+        <div class="row" v-if="puzzle.image">
+            <div class="col">
+                <div v-html="renderPart2" id="puzzleHtml2"></div>
+            </div>
+        </div>
         <div class="row" v-if="puzzle.is_finish == 1 && puzzle.extend_content && puzzle.extend_content != ''">
             <div class="col">
                 <div class="alert alert-dark">
                     <h5>隐藏的内容</h5>
                     <hr/>
                     <div v-html="renderedExtendHtml"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div v-if="puzzle.type == 0">
-                    <a :href="puzzle.image" target="_blank"><img class="puzzle-image" :src="puzzle.image"></a>
-                </div>
-                <div v-if="puzzle.type == 1" v-html="puzzle.html" id="puzzleHtml">
-
                 </div>
             </div>
         </div>
@@ -93,7 +92,9 @@ interface PuzzleItem {
 
 const renderedHtml = ref("");
 const renderedExtendHtml = ref("");
-const isYearBold = ref(false);
+
+const renderPart1 = ref("");
+const renderPart2 = ref("");
 
 const powerPoint = ref(0);
 const powerPointCalcTime = ref(0);
@@ -103,6 +104,10 @@ const timer = ref<NodeJS.Timer | null>();
 
 onMounted(async () => {
     if (!isLogin()) {
+        router.push('/');
+        return;
+    }
+    if (localStorage.getItem("metaUnlock") !== "1") {
         router.push('/');
         return;
     }
@@ -149,7 +154,7 @@ function getPowerPointDynamic() {
 async function loadPuzzleDetail() {
     let year = parseInt(route.params.yn as string);
 
-    let api = gConst.apiRoot + "/play/get-year-detail";
+    let api = gConst.apiRoot + "/play/get-meta-detail";
     let res = await fetchPostWithSign(api, {
         year
     });
@@ -159,14 +164,10 @@ async function loadPuzzleDetail() {
         if (data.puzzle) {
             Object.assign(puzzle, data.puzzle);
 
-            if (puzzle.content.includes("<!--boldyear-->")) {
-                isYearBold.value = true;
-            }
-
             if (puzzle.content) renderedHtml.value = marked(puzzle.content);
             if (puzzle.extend_content) renderedExtendHtml.value = marked(puzzle.extend_content);
 
-            if (puzzle.type == 1) { //HTML
+            if (puzzle.html) { //HTML
                 let html = puzzle.html;
                 puzzle.html = html.replace(/<script.*?>([\s\S]+?)<\/script>/, (_, js) => {
                     nextTick(() => {
@@ -178,6 +179,21 @@ async function loadPuzzleDetail() {
                     });
                     return "";
                 });
+                renderPart1.value = marked(puzzle.html);
+            }
+            if (puzzle.image) {
+                let html = puzzle.image;
+                puzzle.image = html.replace(/<script.*?>([\s\S]+?)<\/script>/, (_, js) => {
+                    nextTick(() => {
+                        let htmlContainer = document.getElementById("puzzleHtml2");
+                        if (!htmlContainer) return;
+                        let ele = document.createElement("script");
+                        ele.innerHTML = js;
+                        htmlContainer.appendChild(ele);
+                    });
+                    return "";
+                });
+                renderPart2.value = marked(puzzle.image);
             }
         }
         powerPoint.value = data.power_point;

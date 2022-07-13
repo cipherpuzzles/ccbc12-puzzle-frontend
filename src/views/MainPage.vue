@@ -2,8 +2,20 @@
     <div class="container-lg">
         <div class="row main-area-line">
             <div class="col">
-                <div class="ratio ratio-bg main-area">
+                <div class="ratio ratio-bg" :class="[showMeta ? 'main-meta-area' : 'main-area']">
                     <div class="main-area-container">
+                        <div class="meta-hot-area">
+                            <div class="meta-screw screw-1" @click="metaScrewButton(0)" v-if="showMetaScrew[0] === 1"></div>
+                            <div class="meta-screw screw-2" @click="metaScrewButton(1)" v-if="showMetaScrew[1] === 1"></div>
+                            <div class="meta-screw screw-3" @click="metaScrewButton(2)" v-if="showMetaScrew[2] === 1"></div>
+                            <div class="meta-screw screw-4" @click="metaScrewButton(3)" v-if="showMetaScrew[3] === 1"></div>
+                            <div class="meta-screw screw-5" @click="metaScrewButton(4)" v-if="showMetaScrew[4] === 1"></div>
+                            <div class="meta-screw screw-6" @click="metaScrewButton(5)" v-if="showMetaScrew[5] === 1"></div>
+                            <div class="meta-screw screw-7" @click="metaScrewButton(6)" v-if="showMetaScrew[6] === 1"></div>
+                            <div class="meta-screw screw-8" @click="metaScrewButton(7)" v-if="showMetaScrew[7] === 1"></div>
+                            <div class="meta-back-arrow-button" v-if="showMeta" @click="metaRecover"></div>
+                            <div class="meta-puzzle-button" v-if="showMeta" @click="metaPuzzle"></div>
+                        </div>
                         <div class="main-area-header">
                             <div class="left-header-bar">
                                 <button class="left-header-button button-group-start" @click="showTipsContent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="阅读说明信件">
@@ -47,16 +59,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="meta-hot-area">
-                        <div class="meta-screw screw-1"></div>
-                        <div class="meta-screw screw-2"></div>
-                        <div class="meta-screw screw-3"></div>
-                        <div class="meta-screw screw-4"></div>
-                        <div class="meta-screw screw-5"></div>
-                        <div class="meta-screw screw-6"></div>
-                        <div class="meta-screw screw-7"></div>
-                        <div class="meta-screw screw-8"></div>
                     </div>
                 </div>
             </div>
@@ -405,6 +407,37 @@
         border-radius: 50%;
         cursor: pointer;
     }
+    .meta-back-arrow-button{
+        background-image: url('../assets/frame/backbutton.png');
+        position: absolute;
+        height: 38px;
+        width: 30px;
+        left: 14px;
+        top: 360px;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+        &:hover {
+            filter: brightness(0.6)
+        }
+        &:active {
+            filter: brightness(0.1);
+        }
+    }
+    .meta-puzzle-button {
+        position: absolute;
+        width: 64px;
+        height: 190px;
+        top: 325px;
+        left: 1187px;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+        &:hover {
+            box-shadow: 0 0 10px #962426;
+        }
+        &:active {
+            box-shadow: 0 0 10px #561516;
+        }
+    }
     .screw-1 {
         left: 117px;
         top: 22px;
@@ -514,6 +547,18 @@
         }
     }
     .meta-hot-area {
+        .meta-back-arrow-button{
+            height: 38px;
+            width: 30px;
+            left: 10px;
+            top: 310px;
+        }
+        .meta-puzzle-button {
+            width: 58px;
+            height: 164px;
+            top: 280px;
+            left: 1020px;
+        }
         .screw-1 {
             left: 100px;
             top: 19px;
@@ -694,6 +739,7 @@ import { useRouter } from "vue-router";
 import type { BasicResponse } from '../utils/fetchPost';
 import isLogin from '../utils/isLogin';
 import formatTimestamp from '../utils/formatDate';
+import globalBus from '../gstatus/globalBus';
 
 const router = useRouter();
 
@@ -719,6 +765,17 @@ onMounted(async () => {
     tooltipTriggerList.map((tooltipTriggerEl) => {
         return new Tooltip(tooltipTriggerEl);
     });
+
+    //init meta panel
+    if (localStorage.getItem("metaUnlock") === "1") {
+        showMeta.value = true;
+        showMetaScrew.value = [0, 0, 0, 0, 0, 0, 0, 0];
+        metaUnlockStep.value = 8;
+    } else {
+        showMeta.value = false;
+        showMetaScrew.value = [1, 1, 1, 1, 1, 1, 1, 1];
+        metaUnlockStep.value = 0;
+    }
 });
 onBeforeUnmount(() => {
     clearInterval(timer.value!);
@@ -777,7 +834,6 @@ const timeProbeCost = ref(0);
 
 function getPowerPointDynamic() {
     globalStatus.powerPointDynamic = powerPoint.value + Math.floor((new Date().getTime() - powerPointCalcTime.value) / 60000) * powerPointIncreaseRate.value;
-    console.log("update power point dynamic", globalStatus.powerPointDynamic);
 }
 
 async function loadDetail() {
@@ -955,5 +1011,44 @@ async function doPuzzleButton(puzzleItem: SimplePuzzle, yearList: SimplePuzzleGr
 }
 function jumpMetaButton(pgid: number) {
     router.push(`/year/${9999990 + pgid}`);
+}
+
+//meta解锁
+const showMeta = ref(false);
+const showMetaScrew = ref([1, 1, 1, 1, 1, 1, 1, 1]);
+const metaUnlockStep = ref(0);
+const unlockStep = [0, 2, 5, 7, 1, 3, 4, 6];
+function metaScrewButton(n: number) {
+    if (n < 0 || n >= unlockStep.length) return;
+    let realScrew = unlockStep[metaUnlockStep.value];
+    if (realScrew === n) {
+        metaUnlockStep.value++;
+        showMetaScrew.value[n] = 0;
+
+        if (metaUnlockStep.value >= unlockStep.length) {
+            showMeta.value = true;
+            globalBus.emit("message", {
+                type: "success",
+                message: "将时光机控制面板的盖子取了下来。"
+            });
+            localStorage.setItem("metaUnlock", "1");
+        }
+    } else {
+        showMetaScrew.value = [1, 1, 1, 1, 1, 1, 1, 1];
+        metaUnlockStep.value = 0;
+    }
+}
+function metaRecover() {
+    showMeta.value = false;
+    showMetaScrew.value = [1, 1, 1, 1, 1, 1, 1, 1];
+    metaUnlockStep.value = 0;
+    localStorage.setItem("metaUnlock", "0");
+    globalBus.emit("message", {
+        type: "success",
+        message: "将面板装了回去。"
+    });
+}
+function metaPuzzle() {
+    router.push("/last-year");
 }
 </script>
