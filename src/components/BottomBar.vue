@@ -374,6 +374,8 @@ const nowTimestamp = computed(() => {
     return (new Date()).getTime();
 });
 const waCost = computed(() => {
+    if (route.path === "/last-year") return 10;
+
     let year = parseInt(route.params.yn as string);
     if (year > 9900000) return 10;
     else return 5;

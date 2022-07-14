@@ -1,5 +1,5 @@
 <template>
-    <div class="script-wrapper" @click="scriptDoNextStep">
+    <div class="script-wrapper" @click="scriptDoNextStep" @keyup.enter="scriptDoNextStep" @keyup.space="scriptDoNextStep">
         <div v-for="l in screenLines">
             <p v-if="l.type == 'default'" style="color: #FFFFFF">{{ l.content }}</p>
             <p v-if="l.type == 'player'" style="color: #326CFF">{{ l.content }}</p>

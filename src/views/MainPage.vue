@@ -5,16 +5,36 @@
                 <div class="ratio ratio-bg" :class="[showMeta ? 'main-meta-area' : 'main-area']">
                     <div class="main-area-container">
                         <div class="meta-hot-area">
-                            <div class="meta-screw screw-1" @click="metaScrewButton(0)" v-if="showMetaScrew[0] === 1"></div>
-                            <div class="meta-screw screw-2" @click="metaScrewButton(1)" v-if="showMetaScrew[1] === 1"></div>
-                            <div class="meta-screw screw-3" @click="metaScrewButton(2)" v-if="showMetaScrew[2] === 1"></div>
-                            <div class="meta-screw screw-4" @click="metaScrewButton(3)" v-if="showMetaScrew[3] === 1"></div>
-                            <div class="meta-screw screw-5" @click="metaScrewButton(4)" v-if="showMetaScrew[4] === 1"></div>
-                            <div class="meta-screw screw-6" @click="metaScrewButton(5)" v-if="showMetaScrew[5] === 1"></div>
-                            <div class="meta-screw screw-7" @click="metaScrewButton(6)" v-if="showMetaScrew[6] === 1"></div>
-                            <div class="meta-screw screw-8" @click="metaScrewButton(7)" v-if="showMetaScrew[7] === 1"></div>
-                            <div class="meta-back-arrow-button" v-if="showMeta" @click="metaRecover"></div>
-                            <div class="meta-puzzle-button" v-if="showMeta" @click="metaPuzzle"></div>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-1" @click="metaScrewButton(0)" v-if="showMetaScrew[0] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-2" @click="metaScrewButton(1)" v-if="showMetaScrew[1] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-3" @click="metaScrewButton(2)" v-if="showMetaScrew[2] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-4" @click="metaScrewButton(3)" v-if="showMetaScrew[3] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-5" @click="metaScrewButton(4)" v-if="showMetaScrew[4] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-6" @click="metaScrewButton(5)" v-if="showMetaScrew[5] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-7" @click="metaScrewButton(6)" v-if="showMetaScrew[6] === 1"></div>
+                            </Transition>
+                            <Transition name="screwleave">
+                                <div class="meta-screw screw-8" @click="metaScrewButton(7)" v-if="showMetaScrew[7] === 1"></div>
+                            </Transition>
+                            <Transition name="paneldelay">
+                                <div class="meta-back-arrow-button" v-if="showMeta" @click="metaRecover"></div>
+                            </Transition>
+                            <Transition name="paneldelay">
+                                <div class="meta-puzzle-button" v-if="showMeta" @click="metaPuzzle"></div>
+                            </Transition>
                         </div>
                         <div class="main-area-header">
                             <div class="left-header-bar">
@@ -203,7 +223,7 @@
     margin-top: 65px;
 }
 .main-area {
-    background-image: url('../assets/frame/bg.svg');
+    background-image: url('../assets/frame/bg.png');
     background-size: 1297px 768px;
 }
 .main-meta-area {
@@ -403,9 +423,8 @@
         position: absolute;
         height: 10px;
         width: 10px;
-        background-color: rgba(0, 255, 0, 0.5);
-        border-radius: 50%;
-        cursor: pointer;
+        background-image: url('../assets/frame/screw.png');
+        background-size: 10px 10px;
     }
     .meta-back-arrow-button{
         background-image: url('../assets/frame/backbutton.png');
@@ -439,38 +458,88 @@
         }
     }
     .screw-1 {
-        left: 117px;
-        top: 22px;
+        left: 119px;
+        top: 24px;
     }
     .screw-2 {
-        left: 38px;
-        top: 113px;
+        left: 39px;
+        top: 114px;
     }
     .screw-3 {
-        left: 1170px;
-        top: 22px;
+        left: 1167px;
+        top: 24px;
     }
     .screw-4 {
-        left: 1249px;
-        top: 113px;
+        left: 1247px;
+        top: 114px;
     }
     .screw-5 {
-        left: 38px;
+        left: 39px;
         top: 633px;
     }
     .screw-6 {
-        left: 117px;
+        left: 119px;
         top: 724px;
     }
     .screw-7 {
-        left: 1249px;
+        left: 1247px;
         top: 633px;
     }
     .screw-8 {
-        left: 1170px;
+        left: 1167px;
         top: 724px;
     }
 }
+.screwleave-leave-active {
+    animation: screw-leave 1s linear;
+}
+.screwleave-enter-active {
+    animation: screw-enter 1s linear;
+}
+.paneldelay-enter-active {
+    animation: panel-enter 2s linear;
+}
+//rotate 360deg and fade out
+@keyframes screw-leave {
+    0% {
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(360deg);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(720deg);
+        opacity: 0;
+    }
+}
+@keyframes screw-enter {
+    0% {
+        transform: rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: rotate(-360deg);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(-720deg);
+        opacity: 1;
+    }
+}
+@keyframes panel-enter {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 @include media-breakpoint-down(xxl) {
     .main-area,.main-meta-area {
         background-size: 1116px 661px;
@@ -560,7 +629,7 @@
             left: 1020px;
         }
         .screw-1 {
-            left: 100px;
+            left: 101px;
             top: 19px;
         }
         .screw-2 {
@@ -568,7 +637,7 @@
             top: 97px;
         }
         .screw-3 {
-            left: 1006px;
+            left: 1005px;
             top: 19px;
         }
         .screw-4 {
@@ -580,7 +649,7 @@
             top: 545px;
         }
         .screw-6 {
-            left: 100px;
+            left: 101px;
             top: 623px;
         }
         .screw-7 {
@@ -588,7 +657,7 @@
             top: 545px;
         }
         .screw-8 {
-            left: 1006px;
+            left: 1005px;
             top: 623px;
         }
     }
@@ -596,6 +665,9 @@
 @include media-breakpoint-down(xl) {
     .main-area,.main-meta-area {
         background-size: 936px 554px;
+    }
+    .main-area {
+        background-image: url('../assets/frame/bg.svg');
     }
     .main-area-container {
         .main-area-header {
@@ -680,6 +752,9 @@
 @include media-breakpoint-down(lg) {
     .main-area,.main-meta-area {
         background-size: 100%;
+    }
+    .main-area {
+        background-image: url('../assets/frame/bg.svg');
     }
     .main-area-container {
         .main-area-header {
@@ -1014,9 +1089,9 @@ function jumpMetaButton(pgid: number) {
 }
 
 //meta解锁
-const showMeta = ref(false);
-const showMetaScrew = ref([1, 1, 1, 1, 1, 1, 1, 1]);
-const metaUnlockStep = ref(0);
+const showMeta = ref(localStorage.getItem("metaUnlock") === "1" ? true : false);
+const showMetaScrew = ref(localStorage.getItem("metaUnlock") === "1" ? [0, 0, 0, 0, 0, 0, 0, 0] : [1, 1, 1, 1, 1, 1, 1, 1]);
+const metaUnlockStep = ref(localStorage.getItem("metaUnlock") === "1" ? 8 : 0);
 const unlockStep = [0, 2, 5, 7, 1, 3, 4, 6];
 function metaScrewButton(n: number) {
     if (n < 0 || n >= unlockStep.length) return;
