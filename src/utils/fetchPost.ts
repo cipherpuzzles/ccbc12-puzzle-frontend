@@ -30,7 +30,7 @@ export async function fetchPost(url: string, data: object){
 
 export async function fetchPostWithSign(url: string, data: object) {
     let token = localStorage.getItem("token") || "";
-    let ts = Date.now();
+    let ts = (new Date()).getTime();
     let dataBody = JSON.stringify(data);
 
     let unsignedString = `token=${token}&ts=${ts}&bodyString=${dataBody}`;
