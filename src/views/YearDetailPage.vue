@@ -23,6 +23,11 @@
                 </div>
             </div>
         </div>
+        <div class="row" v-if="spContentUseCalc">
+            <div class="col">
+                <SpCalc></SpCalc>
+            </div>
+        </div>
         <div class="row">
             <div class="col">
                 <div v-if="puzzle.type == 0">
@@ -62,6 +67,8 @@ import { BasicResponse, defaultApiErrorAction, fetchPostWithSign } from '../util
 import { marked } from 'marked'
 import globalBus from '../gstatus/globalBus';
 
+import SpCalc from '../components/puzzlesParts/spCalc.vue';
+
 const route = useRoute();
 const router = useRouter();
 
@@ -94,6 +101,7 @@ interface PuzzleItem {
 const renderedHtml = ref("");
 const renderedExtendHtml = ref("");
 const isYearBold = ref(false);
+const spContentUseCalc = ref(false);
 
 const powerPoint = ref(0);
 const powerPointCalcTime = ref(0);
@@ -161,6 +169,9 @@ async function loadPuzzleDetail() {
 
             if (puzzle.content.includes("<!--boldyear-->")) {
                 isYearBold.value = true;
+            }
+            if (puzzle.content.includes("<!--use calc-->")) {
+                spContentUseCalc.value = true;
             }
 
             if (puzzle.content) renderedHtml.value = marked(puzzle.content);
