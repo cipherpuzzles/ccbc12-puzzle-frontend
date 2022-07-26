@@ -21,13 +21,7 @@
             <div class="calc-screen-content" v-if="context.error === 0">
                 {{ context.screen }}
             </div>
-            <div class="calc-screen-content" v-else>
-                <span v-if="context.error === 1">Error: AM Overflow</span>
-                <span v-if="context.error === 2">Error: Divide by 0</span>
-                <span v-if="context.error === 3">Error: NEO</span>
-                <span v-if="context.error === 4">Error: Stack Overflow</span>
-                <span v-if="context.error === 5">Error: Invalid</span>
-            </div>
+            <div class="calc-screen-content error-text" v-else>?!</div>
         </div>
         <div class="calc-logo">
             <img :src="logoSvg" height="45"/>
@@ -39,7 +33,7 @@
             <div class="calc-button" @click="CalcButton('E')">E</div>
             <div class="calc-button" @click="CalcButton('F')">F</div>
             <div class="calc-button" @click="CalcButton('G')">G</div>
-            <div class="calc-button calc-button-ac" @click="CalcButton('\r')">AC</div>
+            <div class="calc-button calc-button-ac" @click="CalcButton('\r')">.</div>
             <div class="calc-button" @click="CalcButton('6')">6</div>
             <div class="calc-button" @click="CalcButton('7')">7</div>
             <div class="calc-button" @click="CalcButton('8')">8</div>
@@ -54,10 +48,10 @@
             <div class="calc-button" @click="CalcButton('5')">5</div>
             <div class="calc-button calc-button-broken">/</div>
             <div class="calc-button" @click="CalcButton('-')">-</div>
-            <div class="calc-button" @click="CalcButton('~')">+/-</div>
+            <div class="calc-button" @click="CalcButton('~')">~</div>
             <div class="calc-button calc-button-space" @click="CalcButton(' ')"> </div>
             <div class="calc-button calc-button-broken">0</div>
-            <div class="calc-button" @click="CalcButton('%')">MOD</div>
+            <div class="calc-button" @click="CalcButton('%')">%</div>
         </div>
     </div>
 </template>
@@ -136,6 +130,7 @@
     border-bottom: 2px solid #cccccc;
     .calc-screen-content {
         position: absolute;
+        font-family: 'ccbc12symbols';
         width: 100%;
         height: 100%;
         padding-right: 8px;
@@ -145,8 +140,11 @@
         color: #000000;
         z-index: 2;
         &::selection {
-            background: rgba(153, 199, 138, 0.4)        
+            background: rgba(255, 47, 109, 0.6);
         }
+    }
+    .error-text {
+        color: #dc3222;
     }
 }
 .calc-logo {
@@ -174,7 +172,8 @@
         margin-top: 10px;
         border-radius: 11px;
         cursor: pointer;
-        font-size: 24px;
+        font-family: 'ccbc12symbols';
+        font-size: 42px;
         text-align: center;
         line-height: 60px;
         user-select: none;

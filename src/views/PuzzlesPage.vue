@@ -38,14 +38,6 @@
 </template>
 
 <style lang="scss" scoped>
-@font-face {
-    font-family: 'ccbc12symbols';
-    src: url('../assets/ccbc12symbols-Regular-SVG.woff2') format('woff2'), /* Modern Browsers */
-         url('../assets/ccbc12symbols-Regular-SVG.otf') format('opentype'); /* Safari, Android, iOS */
-    font-style: normal;
-    font-weight: normal;
-    text-rendering: optimizeLegibility;
-}
 .puzzle-content-line {
     margin-bottom: 40px;
 }
