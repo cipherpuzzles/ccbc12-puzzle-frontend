@@ -28,6 +28,11 @@
                 <SpCalc></SpCalc>
             </div>
         </div>
+        <div class="row" v-if="spContentUseLightGame">
+            <div class="col">
+                <SpLightgame></SpLightgame>
+            </div>
+        </div>
         <div class="row">
             <div class="col">
                 <div v-if="puzzle.type == 0">
@@ -68,6 +73,7 @@ import { marked } from 'marked'
 import globalBus from '../gstatus/globalBus';
 
 import SpCalc from '../components/puzzlesParts/spCalc.vue';
+import SpLightgame from '../components/puzzlesParts/spLightgame.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -102,6 +108,7 @@ const renderedHtml = ref("");
 const renderedExtendHtml = ref("");
 const isYearBold = ref(false);
 const spContentUseCalc = ref(false);
+const spContentUseLightGame = ref(false);
 
 const powerPoint = ref(0);
 const powerPointCalcTime = ref(0);
@@ -172,6 +179,9 @@ async function loadPuzzleDetail() {
             }
             if (puzzle.content.includes("<!--use calc-->")) {
                 spContentUseCalc.value = true;
+            }
+            if (puzzle.content.includes("<!--use lightgame-->")) {
+                spContentUseLightGame.value = true;
             }
 
             if (puzzle.content) renderedHtml.value = marked(puzzle.content);
