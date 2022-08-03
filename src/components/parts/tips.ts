@@ -100,7 +100,7 @@ export default function useTipsPart() {
             return;
         }
 
-        let ppConfirmResult = await powerPointConfirm(`正在通过 TIPS 系统提取 #${tip_num} 信息。这将消耗能量，确定要继续吗？`, tipsStatus.value.unlock_cost);
+        let ppConfirmResult = await powerPointConfirm(`正在通过 HINT 系统提取 #${tip_num} 信息。这将消耗能量，确定要继续吗？`, tipsStatus.value.unlock_cost);
         if (!ppConfirmResult) return;
     
         let api = gConst.apiRoot + "/play/unlock-tips";
