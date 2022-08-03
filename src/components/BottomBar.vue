@@ -265,7 +265,7 @@
                                     <div class="text-secondary">回复时间： {{ formatTimestamp(currentOracle.reply_time) }}</div>
                                     <div class="mt-2" v-html="currentOracle.reply_content_html"></div>
                                     <div class="mt-2" v-if="currentOracle.extend_function">
-                                        <div class="text-info">在您查看神谕的同时，您可无需能量直接解锁提示 {{ currentOracle.extend_function_render }}</div>
+                                        <div class="text-info">在您查看神谕的同时，您可无需能量直接解锁锦囊 {{ currentOracle.extend_function_render }}</div>
                                     </div>
                                 </div>
                             </div>
