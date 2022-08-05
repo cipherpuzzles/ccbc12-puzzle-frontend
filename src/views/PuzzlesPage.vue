@@ -18,15 +18,11 @@
                 <ProblemContent></ProblemContent>
             </div>
         </div>
-        <div class="row answer-input-line center">
-            <div class="col-lg-3">
-                <div class="btn-group" role="group">
+        <div class="row answer-input-line center justify-content-center">
+            <div class="col-lg-9">
+                <div class="input-group input-group-lg">
                     <button class="btn btn-lg btn-outline-primary" @click="showPuzzlesScoreboard">排行榜</button>
                     <button class="btn btn-lg btn-outline-primary" @click="showPuzzlesAnno">公 告</button>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="input-group input-group-lg">
                     <input v-model="answer" type="text" class="form-control" placeholder="填写答案" @keyup.enter="checkAnswer">
                     <button class="btn btn-lg btn-primary" type="button" @click="checkAnswer">提 交</button>
                 </div>
