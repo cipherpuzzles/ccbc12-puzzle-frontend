@@ -116,6 +116,8 @@ const powerPointIncreaseRate = ref(0);
 
 const timer = ref<NodeJS.Timer | null>();
 
+let DestroyAction: (() => void)[] = [];
+
 onMounted(async () => {
     if (!isLogin()) {
         router.push('/');
@@ -139,6 +141,10 @@ onMounted(async () => {
 onBeforeUnmount(() => {
     clearInterval(timer.value!);
     timer.value = null;
+
+    DestroyAction.forEach((action) => {
+        action();
+    });
 });
 
 //onCreated {
@@ -221,5 +227,8 @@ async function loadPuzzleDetail() {
     } else {
         defaultApiErrorAction(data);
     }
+}
+(<any>window)["destroyAction"] = (action: () => void) => {
+    DestroyAction.push(action);
 }
 </script>
