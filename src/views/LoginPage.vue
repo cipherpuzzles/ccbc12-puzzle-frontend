@@ -51,6 +51,8 @@ async function loginCheck(ticket: string) {
 
         if (navbarStep === "bar2nd-status") {
             router.push('/main');
+        } else if (data.open_type === 1) {
+            router.push('/preface');
         } else if (navbarStep === "oo") {
             router.push('/puzzles');
         } else {
