@@ -24,34 +24,34 @@
             <div class="calc-screen-content error-text" v-else>?!</div>
         </div>
         <div class="calc-logo">
-            <img :src="logoSvg" height="45"/>
+            <img :src="logoWPng" height="35"/>
         </div>
         <div class="calc-buttons-area">
-            <div class="calc-button" @click="CalcButton('B')">B</div>
-            <div class="calc-button" @click="CalcButton('C')">C</div>
-            <div class="calc-button" @click="CalcButton('D')">D</div>
-            <div class="calc-button" @click="CalcButton('E')">E</div>
-            <div class="calc-button" @click="CalcButton('F')">F</div>
-            <div class="calc-button" @click="CalcButton('G')">G</div>
+            <div class="calc-button" @click="CalcButton('ɋ')">ɋ</div>
+            <div class="calc-button" @click="CalcButton('Ɍ')">Ɍ</div>
+            <div class="calc-button" @click="CalcButton('ɍ')">ɍ</div>
+            <div class="calc-button" @click="CalcButton('Ɏ')">Ɏ</div>
+            <div class="calc-button" @click="CalcButton('ɏ')">ɏ</div>
+            <div class="calc-button" @click="CalcButton('ɐ')">ɐ</div>
             <div class="calc-button calc-button-ac" @click="CalcButton('\r')">.</div>
-            <div class="calc-button" @click="CalcButton('6')">6</div>
-            <div class="calc-button" @click="CalcButton('7')">7</div>
-            <div class="calc-button" @click="CalcButton('8')">8</div>
-            <div class="calc-button" @click="CalcButton('9')">9</div>
-            <div class="calc-button" @click="CalcButton('A')">A</div>
-            <div class="calc-button" @click="CalcButton('*')">*</div>
-            <div class="calc-button" @click="CalcButton('+')">+</div>
-            <div class="calc-button" @click="CalcButton('1')">1</div>
-            <div class="calc-button" @click="CalcButton('2')">2</div>
-            <div class="calc-button" @click="CalcButton('3')">3</div>
-            <div class="calc-button" @click="CalcButton('4')">4</div>
-            <div class="calc-button" @click="CalcButton('5')">5</div>
-            <div class="calc-button calc-button-broken">/</div>
-            <div class="calc-button" @click="CalcButton('-')">-</div>
+            <div class="calc-button" @click="CalcButton('Ɇ')">Ɇ</div>
+            <div class="calc-button" @click="CalcButton('ɇ')">ɇ</div>
+            <div class="calc-button" @click="CalcButton('Ɉ')">Ɉ</div>
+            <div class="calc-button" @click="CalcButton('ɉ')">ɉ</div>
+            <div class="calc-button" @click="CalcButton('Ɋ')">Ɋ</div>
+            <div class="calc-button" @click="CalcButton('ч')">ч</div>
+            <div class="calc-button" @click="CalcButton('х')">х</div>
+            <div class="calc-button" @click="CalcButton('Ɂ')">Ɂ</div>
+            <div class="calc-button" @click="CalcButton('ɂ')">ɂ</div>
+            <div class="calc-button" @click="CalcButton('Ƀ')">Ƀ</div>
+            <div class="calc-button" @click="CalcButton('Ʉ')">Ʉ</div>
+            <div class="calc-button" @click="CalcButton('Ʌ')">Ʌ</div>
+            <div class="calc-button calc-button-broken">ш</div>
+            <div class="calc-button" @click="CalcButton('ц')">ц</div>
             <div class="calc-button" @click="CalcButton('~')">~</div>
             <div class="calc-button calc-button-space" @click="CalcButton(' ')"> </div>
-            <div class="calc-button calc-button-broken">0</div>
-            <div class="calc-button" @click="CalcButton('%')">%</div>
+            <div class="calc-button calc-button-broken">ɀ</div>
+            <div class="calc-button" @click="CalcButton('щ')">щ</div>
         </div>
     </div>
 </template>
@@ -149,8 +149,8 @@
 }
 .calc-logo {
     position: absolute;
-    top: 341px;
-    left: 625px;
+    top: 347px;
+    left: 633px;
     user-select: none;
 }
 .calc-buttons-area {
@@ -173,9 +173,9 @@
         border-radius: 11px;
         cursor: pointer;
         font-family: 'ccbc12symbols';
-        font-size: 42px;
+        font-size: 38px;
         text-align: center;
-        line-height: 60px;
+        line-height: 50px;
         user-select: none;
         transition: all 0.1s ease-in-out;
         &:hover {
@@ -210,7 +210,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import logoSvg from '../../assets/logo.svg';
+import logoWPng from '../../assets/logo_w.png';
 import gConst from '../../gstatus/const';
 import { BasicResponse, defaultApiErrorAction, fetchPostWithSign } from '../../utils/fetchPost';
 
