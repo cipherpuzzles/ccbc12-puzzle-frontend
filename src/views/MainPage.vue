@@ -506,11 +506,11 @@
         opacity: 1;
     }
     50% {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
         opacity: 1;
     }
     100% {
-        transform: rotate(720deg);
+        transform: rotate(-720deg);
         opacity: 0;
     }
 }
@@ -520,11 +520,11 @@
         opacity: 0;
     }
     50% {
-        transform: rotate(-360deg);
+        transform: rotate(360deg);
         opacity: 1;
     }
     100% {
-        transform: rotate(-720deg);
+        transform: rotate(720deg);
         opacity: 1;
     }
 }

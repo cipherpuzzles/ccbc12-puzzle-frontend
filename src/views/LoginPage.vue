@@ -49,14 +49,18 @@ async function loginCheck(ticket: string) {
 
         const navbarStep = localStorage.getItem("navbar-step");
 
-        if (navbarStep === "bar2nd-status") {
-            router.push('/main');
-        } else if (data.open_type === 1) {
-            router.push('/preface');
-        } else if (navbarStep === "oo") {
-            router.push('/puzzles');
+        if (data.open_type === 1) {
+            if (navbarStep === "bar2nd-status") {
+                router.push('/main');
+            } else {
+                router.push('/preface');
+            }
         } else {
-            router.push('/prologue');
+            if (navbarStep === "oo") {
+                router.push('/puzzles');
+            } else {
+                router.push('/prologue');
+            }
         }
     } else {
         if (data.status == 2){
