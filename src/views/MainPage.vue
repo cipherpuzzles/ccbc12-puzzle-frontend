@@ -1092,7 +1092,7 @@ function jumpMetaButton(pgid: number) {
 const showMeta = ref(localStorage.getItem("metaUnlock") === "1" ? true : false);
 const showMetaScrew = ref(localStorage.getItem("metaUnlock") === "1" ? [0, 0, 0, 0, 0, 0, 0, 0] : [1, 1, 1, 1, 1, 1, 1, 1]);
 const metaUnlockStep = ref(localStorage.getItem("metaUnlock") === "1" ? 8 : 0);
-const unlockStep = [0, 2, 5, 7, 1, 3, 4, 6];
+const unlockStep = [4, 2, 7, 1, 3, 5, 0, 6];
 function metaScrewButton(n: number) {
     if (n < 0 || n >= unlockStep.length) return;
     let realScrew = unlockStep[metaUnlockStep.value];
