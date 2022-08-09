@@ -884,6 +884,8 @@ interface GetYearListResponse extends BasicResponse {
     power_point_calc_time: number;
     power_point_increase_rate: number;
     time_probe_cost: number;
+    try_answer_cost: number;
+    try_meta_answer_cost: number;
 }
 
 interface SimplePuzzleGroup {
@@ -923,6 +925,8 @@ async function loadDetail() {
         powerPointCalcTime.value = data.power_point_calc_time;
         powerPointIncreaseRate.value = data.power_point_increase_rate;
         timeProbeCost.value = data.time_probe_cost;
+        globalStatus.tryAnswerCost = data.try_answer_cost;
+        globalStatus.tryMetaAnswerCost = data.try_meta_answer_cost;
         getPowerPointDynamic();
     } else {
         defaultApiErrorAction(data);
@@ -1034,7 +1038,7 @@ async function sendYearProbe(e: Event) {
         if (targetEl.tagName === "INPUT") return;
     }
 
-    let result = await powerPointConfirm(`正在准备探测 ${explorerYear.value} 年。探测从未探测过的年份将会消耗能量，确定要探测吗？`, timeProbeCost.value);
+    let result = await powerPointConfirm(`正在准备探测 ${explorerYear.value} 年。将消耗 ${timeProbeCost.value} 能量，已探测过的年份不会重复消耗能量，确定要探测吗？`, timeProbeCost.value);
     if (!result) return;
 
     let api = gConst.apiRoot + "/play/probe-year";

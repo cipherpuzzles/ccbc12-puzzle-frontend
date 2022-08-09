@@ -49,7 +49,7 @@
                             <VoteButton type="down" :status="globalStatus.currentPuzzleVoteStatus === 2 ? 'on' : 'off'"></VoteButton>
                         </button>
                     </li>
-                    <form class="d-flex" @submit.prevent="sendAnswer(yearId)" data-bs-toggle="tooltip" data-bs-placement="top" :title="'回答错误将会 -' + waCost + ' 能量'">
+                    <form class="d-flex" @submit.prevent="sendAnswer(yearId)" data-bs-toggle="tooltip" data-bs-placement="top" id="answerInputToolTip" data-bs-html="true" :title="'当前能量 ' + globalStatus.powerPointDynamic + '<br>回答错误将会 -' + waCost + ' 能量'">
                         <input class="form-control me-1 mb-2 mb-md-0 bg-light text-black answer-input" type="input" placeholder="Answer" aria-label="Answer" v-model="answer">
                         <li class="nav-item me-2"><button class="btn btn-primary answer-input-submit-button" type="submit">提交</button></li>
                     </form>
@@ -374,11 +374,11 @@ const nowTimestamp = computed(() => {
     return (new Date()).getTime();
 });
 const waCost = computed(() => {
-    if (route.path === "/last-year") return 10;
+    if (route.path === "/last-year") return globalStatus.tryMetaAnswerCost;
 
     let year = parseInt(route.params.yn as string);
-    if (year > 9900000) return 10;
-    else return 5;
+    if (year > 9900000) return globalStatus.tryMetaAnswerCost;
+    else return globalStatus.tryAnswerCost;
 });
 const yearId = computed(() => {
     if (route.path === "/last-year") return 9999999;

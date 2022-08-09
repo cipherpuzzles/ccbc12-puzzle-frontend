@@ -120,7 +120,7 @@ onMounted(async () => {
 
     nextTick(() => {
         //init bs-tooltip
-        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        let tooltipTriggerList = (<Element[]>[]).slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map((tooltipTriggerEl) => {
             return new Tooltip(tooltipTriggerEl);
         });
@@ -129,6 +129,14 @@ onMounted(async () => {
 onBeforeUnmount(() => {
     clearInterval(timer.value!);
     timer.value = null;
+
+    //hide answer tooltip
+    console.log("destroy tooltip");
+    let tooltipContainerElList = (<Element[]>[]).slice.call(document.querySelectorAll('.tooltip'));
+    //remove show class from each tooltip
+    tooltipContainerElList.map((tooltipContainerEl) => {
+        tooltipContainerEl.classList.remove('show');
+    });
 });
 
 //onCreated {
