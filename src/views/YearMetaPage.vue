@@ -120,7 +120,7 @@ onMounted(async () => {
 
     nextTick(() => {
         //init bs-tooltip
-        let tooltipTriggerList = (<Element[]>[]).slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        let tooltipTriggerList = ([]).slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map((tooltipTriggerEl) => {
             return new Tooltip(tooltipTriggerEl);
         });
@@ -132,7 +132,7 @@ onBeforeUnmount(() => {
 
     //hide answer tooltip
     console.log("destroy tooltip");
-    let tooltipContainerElList = (<Element[]>[]).slice.call(document.querySelectorAll('.tooltip'));
+    let tooltipContainerElList: any[] = ([]).slice.call(document.querySelectorAll('.tooltip'));
     //remove show class from each tooltip
     tooltipContainerElList.map((tooltipContainerEl) => {
         tooltipContainerEl.classList.remove('show');
@@ -214,7 +214,7 @@ async function loadPuzzleDetail() {
     }
 }
 
-(<any>window)["backendApi"] = async (path: string, req: object) => {
+(window as any)["backendApi"] = async (path: string, req: object) => {
     let api = gConst.apiRoot + path;
     let res = await fetchPostWithSign(api, req);
     let data = await res.json();

@@ -29,10 +29,7 @@ export default function usePuzzlesScoreboard() {
                         </div>
                         <div class="modal-body">
                             <p>排行榜说明：</p>
-                            <ul>
-                                <li>除了参赛队伍外，一些未报名的用户将以个人身份参与排名，他们名字后面会带上标签。但是他们并不会影响比赛结果。</li>
-                                <li>本排行榜按照解出题目数多少排序，若解出题目数相同，则按解出最后一题的时间排序，解出的越早排序越高。时间记录到毫秒级别，因此不会有并列名次。</li>
-                            </ul>
+                            <p>本排行榜按照解出题目数多少排序，若解出题目数相同，则按解出最后一题的时间排序，解出的越早排序越高。时间记录到毫秒级别，因此不会有并列名次。</p>
                             <table class="table table-striped table-dark table-hover">
                                 <colgroup>
                                     <col width="48" />

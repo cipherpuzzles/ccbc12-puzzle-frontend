@@ -217,7 +217,7 @@ async function loadPuzzleDetail() {
     }
 }
 
-(<any>window)["backendApi"] = async (path: string, req: object) => {
+(window as any)["backendApi"] = async (path: string, req: object) => {
     let api = gConst.apiRoot + path;
     let res = await fetchPostWithSign(api, req);
     let data = await res.json();
@@ -228,7 +228,7 @@ async function loadPuzzleDetail() {
         defaultApiErrorAction(data);
     }
 }
-(<any>window)["destroyAction"] = (action: () => void) => {
+(window as any)["destroyAction"] = (action: () => void) => {
     DestroyAction.push(action);
 }
 </script>

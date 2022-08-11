@@ -94,5 +94,5 @@ function deepClone2DArray(arr: number[][]): number[][] {
     return tempArr;
 }
 
-(<any>window)["lightGameInit"] = gameInit;
+(window as any)["lightGameInit"] = gameInit;
 </script>
